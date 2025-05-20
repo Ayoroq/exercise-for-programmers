@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Simple Math GUI</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Arial, sans-serif;
+                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                min-height: 100vh;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+
+            #value_inputs {
+                background: white;
+                padding: 2rem;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                width: 100%;
+                max-width: 400px;
+            }
+
+            h1 {
+                color: #0c1f11;
+                text-align: center;
+                margin-bottom: 1.5rem;
+                font-size: 1.8rem;
+                font-weight: 600;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 0.5rem;
+                color: #34495e;
+                font-weight: 500;
+            }
+
+            input[type="number"] {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #e2e8f0;
+                border-radius: 8px;
+                font-size: 1rem;
+                margin-bottom: 1rem;
+                transition: border-color 0.3s ease;
+                box-sizing: border-box;
+            }
+
+            input[type="number"]:focus {
+                outline: none;
+                border-color: #3498db;
+            }
+
+            #result {
+                margin-top: 1.5rem;
+                padding: 1rem;
+                background: #f8f9fa;
+                border-radius: 8px;
+                border: 1px solid #e2e8f0;
+            }
+
+            #output {
+                display: block;
+                line-height: 1.6;
+                color: #2c3e50;
+                font-size: 1.1rem;
+            }
+
+            /* Remove spinner buttons from number inputs */
+            input[type="number"]::-webkit-inner-spin-button,
+            input[type="number"]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            input[type="number"] {
+                -moz-appearance: textfield;
+            }
+
+            /* Error message styling */
+            #output:empty::before {
+                content: "Results will appear here";
+                color: #94a3b8;
+                font-style: italic;
+            }
+
+            @media (max-width: 480px) {
+                #value_inputs {
+                    padding: 1.5rem;
+                }
+
+                h1 {
+                    font-size: 1.5rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Math Operations on two values</h1>
+        <form id="value_inputs">
+            <label for="num1">First Number:</label>
+            <input type="number" id="num1" name="num1" min="0" placeholder="Enter first number" required><br>
+            <br>
+            <label for="num2">Second Number:</label> 
+            <input type="number" id="num2" name="num2" min="0" placeholder="Enter second number" required><br>
+            <br>
+            <div id="result">  
+                 <output id="output"></output>
+            </div>
+        </form>
+        <script>
+            function valueInput(){
+                const num1 = parseFloat(document.getElementById("num1").value);
+                const num2 = parseFloat(document.getElementById("num2").value);
+                
+                if(isNaN(num1) || isNaN(num2)){
+                    document.getElementById("output").innerHTML = "Please enter valid numbers";
+                    return null;
+                }
+                
+                if(num1 < 0 || num2 < 0){
+                    document.getElementById("output").innerHTML = "Please enter positive numbers";
+                    return null;
+                }
+                
+                return {num1, num2};
+            }
+            function add(){
+                const values = valueInput();
+                if (values === null) return null;
+                return values.num1 + values.num2;
+            }
+            function subtract(){
+                const values = valueInput();
+                if (values === null) return null;
+                return values.num1 - values.num2;
+            }
+            function multiply(){
+                const values = valueInput();
+                if (values === null) return null;
+                return values.num1 * values.num2;
+            }
+            function divide(){
+                const values = valueInput();
+                if (values === null) return null;
+                if(values.num2 == 0){
+                    return "Cannot divide by zero";
+                }
+                return values.num1 / values.num2;
+            }
+            function operation(){
+                const values = valueInput();
+                if (values === null) return;
+                
+                const sum = add();
+                const sub = subtract();
+                const mult = multiply();
+                const div = divide();
+                
+                
+                document.getElementById("output").innerHTML = `
+                    ${values.num1} + ${values.num2} = ${sum}<br>
+                    ${values.num1} - ${values.num2} = ${sub}<br>
+                    ${values.num1} * ${values.num2} = ${mult}<br>
+                    ${values.num1} / ${values.num2} = ${div.toFixed(2)}<br>
+                `;
+            }
+            document.getElementById("num1").addEventListener("input", operation)
+            document.getElementById("num2").addEventListener("input", operation)
+        </script>
+    </body>
+</html>

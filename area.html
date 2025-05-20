@@ -1,0 +1,164 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f6f9fc 0%, #edf2f7 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #2d3748;
+        }
+
+        #inputform {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #2b6cb0;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+
+        #result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #ebf8ff;
+            border-radius: 8px;
+            border: 1px solid #bee3f8;
+        }
+
+        #output {
+            display: block;
+            text-align: center;
+            line-height: 1.6;
+            font-size: 1.1rem;
+            color: #2b6cb0;
+        }
+
+        /* Remove spinner buttons from number inputs */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* Placeholder styling */
+        #output:empty::before {
+            content: "Enter dimensions to calculate area";
+            color: #718096;
+            font-style: italic;
+        }
+
+        @media (max-width: 480px) {
+            #inputform {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form id="inputform">
+        <h1>Area Calculator</h1>
+        
+        <label for="unit">Unit of Measurement</label>
+        <select id="unit">
+            <option value="feet">Feet</option>
+            <option value="meters">Meters</option>
+        </select>
+
+        <label for="length">Length</label>
+        <input type="number" id="length" min="1" placeholder="Enter length" required>
+
+        <label for="width">Width</label>
+        <input type="number" id="width" min="1" placeholder="Enter width" required>
+
+        <div id="result">
+            <output id="output"></output>
+        </div>
+    </form>
+    <script>
+        let unit = document.getElementById('unit');
+
+        function valueInput(){
+            const length = parseFloat(document.getElementById("length").value);
+            const width = parseFloat(document.getElementById("width").value);
+
+            if(isNaN(length) || isNaN(width)){
+                    document.getElementById("output").innerHTML = "Please enter valid numbers";
+                    return null;
+                }
+                
+            return {length, width};
+        }
+        function calculateArea() {
+            const values = valueInput();
+            if(!values) return;
+
+            let areaInSquareFeet;
+            let areaInSquareMeters;
+
+            if (unit.value === 'feet') {
+                areaInSquareFeet = values.length * values.width; 
+                areaInSquareMeters = parseFloat((areaInSquareFeet * 0.09290304).toFixed(2));
+            }else{
+                areaInSquareMeters = values.length * values.width;
+                areaInSquareFeet = parseFloat((areaInSquareMeters / 0.09290304).toFixed(2));
+                
+            }
+            document.getElementById('output').innerHTML = `
+                Area in square feet: ${areaInSquareFeet} ft<sup>2</sup><br>
+                Area in square meters: ${areaInSquareMeters} m<sup>2</sup>
+            `;
+        }
+          unit.addEventListener('change', function() {
+            calculateArea();
+        });
+        document.getElementById('length').addEventListener('input', calculateArea);
+        document.getElementById('width').addEventListener('input', calculateArea);
+    </script>
+</body>
+</html>

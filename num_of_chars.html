@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number of Characters</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #inputform {
+            background: #ffffff;
+            padding: 32px 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 16px;
+        }
+        input[type="reset"] {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #339944;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        input[type="reset"]:hover {
+            background: #267733;
+        }
+        #result {
+            margin: 16px auto;
+            color: #222;
+            border: 1px solid #339944;
+            background-color: #eaffea;
+            padding: 12px;
+            width: 220px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(51,153,68,0.08);
+            font-weight: 500;
+        }
+        h1 {
+            margin-bottom: 24px;
+            color: #339944;
+        }
+    </style>
+</head> 
+<body>
+    <form id="inputform">
+        <h1>Character Counter</h1>
+        <label for="textInput">Enter text:</label><br>
+        <input type="text" id="textInput" name="textInput" placeholder="Enter some text" required autocomplete="off"><br>
+        <div id="result">
+            Number of characters: <span id="charCount">0</span>
+        </div>
+        <input type="reset" value="Clear">
+    </form>
+    <script>
+        function countCharacters() {
+            let textInput = document.getElementById("textInput").value;
+            let charCount = document.getElementById("charCount");
+            charCount.textContent = textInput.length;
+        }
+        document.getElementById("textInput").addEventListener("input", countCharacters);
+
+        document.getElementById("inputform").addEventListener('submit', function(event) {
+            event.preventDefault();
+        });
+        
+        document.getElementById("inputform").addEventListener('reset', function(event) {
+            document.getElementById("charCount").textContent = 0;
+        });
+    </script>
+</body>
+</html>
