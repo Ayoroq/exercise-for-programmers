@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint Calculator</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f7fa;
+            --border-radius: 10px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: linear-gradient(135deg, #f6f9fc 0%, #edf2f7 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        label {
+            display: block;
+            margin: 8px 0;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        form {
+            margin-top: 1.5rem;
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--secondary-color);
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+        }
+
+        output {
+            display: block;
+            text-align: center;
+            color: #2d3748;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .shape-selector {
+            background: var(--secondary-color);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        form {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Paint Calculator</h1>
+        <div class="shape-selector">
+            <label for="shape">Select Room Shape:</label>
+            <select id="shape" name="shape">
+                <option value="standard">Standard Room</option>
+                <option value="round">Round Room</option>
+                <option value="l-shape">L-Shaped Room</option>
+            </select>
+        </div>
+        <form id="standard_input">
+            <label for="length">Length:</label>
+            <input type="number" id="length" name="length" min="0" placeholder="Enter length in feet" required><br>
+            <br>
+            <label for="width">Width:</label>
+            <input type="number" id="width" name="width" min="0" placeholder="Enter width in feet" required>
+            <br>
+            <br>
+            <div id="result_standard" class="result">
+                <output id="output"></output>
+            </div>
+        </form>
+
+        <form id="round_input" style="display: none;">
+            <label for="radius">Radius:</label>
+            <input type="number" id="radius" name="radius" min="0" placeholder="Enter radius in feet" required><br>
+            <br>
+            <div id="result_round" class="result">
+                <output id="output_2"></output>
+            </div>
+        </form>
+
+        <form id="lshape_input" style="display: none;">
+            <label for="length1">Length 1:</label>
+            <input type="number" id="length1" name="length1" min="0" placeholder="Enter length 1 in feet" required><br>
+            <br>
+            <label for="width1">Width 1:</label>
+            <input type="number" id="width1" name="width1" min="0" placeholder="Enter width 1 in feet" required><br>
+            <br>
+            <label for="length2">Length 2:</label>
+            <input type="number" id="length2" name="length2" min="0" placeholder="Enter length 2 in feet" required><br>
+            <br>
+            <label for="width2">Width 2:</label>
+            <input type="number" id="width2" name="width2" min="0" placeholder="Enter width 2 in feet" required><br>
+            <br>
+            <div id="result_lshape" class="result">
+                <output id="output_3"></output>
+            </div>
+        </form>
+    </div>
+    <script>
+        const shapeSelect = document.getElementById('shape');
+        const standardInput = document.getElementById('standard_input');
+        const roundInput = document.getElementById('round_input');
+        const lshapeInput = document.getElementById('lshape_input');
+        // Represents the number of gallons required to cover one square foot, based on a coverage rate of 350 square feet per gallon
+        const gallonPerSquareFeet = 1/350;
+
+        shapeSelect.addEventListener('change', function() {
+            standardInput.style.display = 'none';
+            roundInput.style.display = 'none';
+            lshapeInput.style.display = 'none';
+
+            if (this.value === 'standard') {
+                standardInput.style.display = 'block';
+            } else if (this.value === 'round') {
+                roundInput.style.display = 'block';
+            } else if (this.value === 'l-shape') {
+                lshapeInput.style.display = 'block';
+            }
+            calculateArea();
+        });
+
+        function calculateStandardArea() {
+            const lengthValue = document.getElementById('length').value;
+            const widthValue = document.getElementById('width').value;
+
+            let length = parseFloat(lengthValue);
+            let width = parseFloat(widthValue);
+
+            if (lengthValue.trim() === "" || widthValue.trim() === "") {
+                document.getElementById("output").innerHTML = "Please fill in all fields";
+                return;
+            }
+            if (isNaN(length) || isNaN(width)) {
+                document.getElementById("output").innerHTML = "Please enter valid numbers";
+                return;
+            }
+            if (length <= 0 || width <= 0) {
+                document.getElementById("output").innerHTML = "Please enter positive numbers";
+                return;
+            }
+            const area = (length * width).toFixed(2);
+            const gallonsneeded = Math.ceil((area * gallonPerSquareFeet).toFixed(2));
+            document.getElementById('output').innerHTML = `Area: ${area} square feet.<br><br>You will need to purchase ${gallonsneeded} gallon(s) of paint.`;
+        }
+
+        function calculateRoundArea() {
+            const radiusValue = document.getElementById('radius').value;
+
+            if (radiusValue.trim() === "") {
+                document.getElementById("output_2").innerHTML = "Please fill in the field";
+                return;
+            }
+
+            const radius = parseFloat(radiusValue);
+            if (isNaN(radius) || radius <= 0) {
+                document.getElementById("output_2").innerHTML = "Please enter a valid positive number";
+                return;
+            }
+            const area = (Math.PI * Math.pow(radius, 2)).toFixed(2);
+            const gallonsneeded = Math.ceil(area * gallonPerSquareFeet);
+            document.getElementById('output_2').innerHTML = `Area: ${area} square feet.<br><br>You will need to purchase ${gallonsneeded} gallon(s) of paint.`;
+        }
+
+        function calculateLShapeArea() {
+            const length1Value = document.getElementById('length1').value;
+            const width1Value = document.getElementById('width1').value;
+            const length2Value = document.getElementById('length2').value;
+            const width2Value = document.getElementById('width2').value;
+
+            const length1 = parseFloat(length1Value.trim());
+            const width1 = parseFloat(width1Value.trim());
+            const length2 = parseFloat(length2Value.trim());
+            const width2 = parseFloat(width2Value.trim());
+
+            if (isNaN(length1) || isNaN(width1) || isNaN(length2) || isNaN(width2)) {
+                document.getElementById("output_3").innerHTML = "Please fill in all fields";
+                return;
+            }
+            if (length1 <= 0 || width1 <= 0 || length2 <= 0 || width2 <= 0) {
+                document.getElementById("output_3").innerHTML = "Please enter positive numbers";
+                return;
+            }
+            const area = ((length1 * width1) + (length2 * width2)).toFixed(2);
+            const gallonsneeded = Math.ceil(area * gallonPerSquareFeet);
+            document.getElementById('output_3').innerHTML = `Area: ${area} square feet.<br><br>You will need to purchase ${gallonsneeded} gallon(s) of paint.`;
+        }
+
+        function calculateArea() {
+            switch (shapeSelect.value) {
+                case 'standard':
+                    calculateStandardArea();
+                    break;
+                case 'round':
+                    calculateRoundArea();
+                    break;
+                case 'l-shape':
+                    calculateLShapeArea();
+                    break;
+                default:
+                    console.error('Unknown shape type selected');
+            }
+        }
+
+        standardInput.addEventListener('input', calculateArea);
+        roundInput.addEventListener('input', calculateArea);
+        lshapeInput.addEventListener('input', calculateArea);
+
+    </script>
+</body>
+</html>
