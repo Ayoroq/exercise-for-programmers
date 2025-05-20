@@ -11,6 +11,8 @@ if (process.argv[2] === undefined) {
         param = process.argv[2].toLowerCase();
     }
 
+let length, width;
+
 do {
     let length = Number(prompt(`What is the length of the room in ${param}? `));
     let width = Number(prompt(`What is the width of the room in ${param}? `));
