@@ -1,0 +1,151 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bac Calculator</title>
+</head>
+<body>
+    <h1>Simple Blood Alcohol level Calculator</h1>
+    <form id="unitForm">
+        <label for="unit">Unit:</label>
+        <select id="unit" name="unit">
+            <option value="Metric">Metric</option>
+            <option value="Imperial">Imperial</option>
+        </select>
+    </form>
+    
+    <form id="metricBacForm"> 
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" name="weight" min="0" placeholder="0.00" max="1000"></input>
+        <br><br>
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <br><br>
+        <label for="drinks">Num of Drinks:</label>
+        <input type="number" id="drinks" name="drinks" min="0" placeholder="0" max="100"></input>
+        <br><br>
+        <label for="alcohol" id="alcohol-label" style="display:none;">Average ABV (%):</label>
+        <input type="number" id="alcohol" style="display:none;" name="alcohol" min="0" placeholder="0.00" max="100"></input>
+        <br><br>
+        <label for="hours" id="hours-label" style="display:none;">Hours:</label>
+        <input type="number" id="hours" style="display:none;" name="hours" min="0" placeholder="0" max="100"></input>
+        <br><br>
+    </form>
+
+    <form id="imperialBacForm" style="display:none;"> 
+        <label for="weight">Weight (lb):</label>
+        <input type="number" id="weight" name="weight" min="0" placeholder="0.00" max="1000"></input>
+        <br><br>
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <br><br>
+        <label for="drinks">Num of Drinks:</label>
+        <input type="number" id="drinks" name="drinks" min="0" placeholder="0" max="100"></input>
+        <br><br>
+        <label for="alcohol" id="alcohol-label" style="display:none;">Average ABV (%):</label>
+        <input type="number" id="alcohol" style="display:none;" name="alcohol" min="0" placeholder="0.00" max="100"></input>
+        <br><br>
+        <label for="hours" id="hours-label" style="display:none;">Hours:</label>
+        <input type="number" id="hours" style="display:none;" name="hours" min="0" placeholder="0" max="100"></input>
+        <br><br>
+    </form>
+
+    <div id="result">
+        <output id="output"></output>
+    </div>
+
+    <script>
+        const unitForm = document.getElementById('unitForm');
+        const metricBacForm = document.getElementById('metricBacForm');
+        const imperialBacForm = document.getElementById('imperialBacForm');
+        const output = document.getElementById('output');
+
+        unitForm.addEventListener('change', function() {
+            if (unitForm.unit.value === 'Metric') {
+                metricBacForm.style.display = 'block';
+                imperialBacForm.style.display = 'none';
+            } else {
+                metricBacForm.style.display = 'none';
+                imperialBacForm.style.display = 'block';
+            }
+        });
+
+        function calculateBac() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const gender = document.getElementById('gender').value;
+            const drinks = parseInt(document.getElementById('drinks').value);
+            const alcohol = parseFloat(document.getElementById('alcohol').value);
+            const hours = parseFloat(document.getElementById('hours').value);
+            let bac;
+            // Validate inputs
+            if (isNaN(weight) || isNaN(drinks)) {
+                output.innerHTML = "Please enter valid numbers.";
+                return;
+            }
+            if (drinks === 0){
+                document.getElementById('alcohol-label').style.display = 'none';
+                document.getElementById('alcohol').style.display = 'none';
+                document.getElementById('hours-label').style.display = 'none';
+                document.getElementById('hours').style.display = 'none';
+                document.getElementById('alcohol').value = '';
+                document.getElementById('hours').value = '';
+            }
+        
+            if (drinks < 0 || weight < 0) {
+                output.innerHTML = "Please enter valid numbers.";
+                return;
+            }
+            if (drinks === 0 && weight >= 0) {
+                output.innerHTML = "You haven't had any drinks yet. You are sober.";
+                return;
+            }else if (weight === 0 && drinks > 0) {
+                output.innerHTML = "Please enter a valid weight.";
+                return;
+            }else if (drinks > 0){
+                document.getElementById('alcohol-label').style.display = 'inline';
+                document.getElementById('alcohol').style.display = 'inline';
+                if (isNaN(alcohol) || alcohol < 0 || alcohol > 100) {
+                    output.innerHTML = "Please enter a valid alcohol by volume (ABV) percentage.";
+                    return;
+                }else if (alcohol >= 0 && alcohol <= 100) {
+                    document.getElementById('hours-label').style.display = 'inline';
+                    document.getElementById('hours').style.display = 'inline';
+                    if (isNaN(hours) || hours < 0) {
+                        output.innerHTML = "Please enter a valid number of hours.";
+                        return;
+                    }
+                }
+            }
+
+
+
+            if (unitForm.unit.value === 'Imperial') {
+            let r = (gender === "Male" ? 0.73 : 0.66);
+            // Calculate BAC: ((drinks * abv * 5.14) / (weight * r)) - (0.015 * hours)
+            bac = ((drinks * alcohol * 5.14) / (weight * r)) - (0.015 * hours);
+            }else {
+                let r = (gender === "Male" ? 0.68 : 0.55);
+                bac = ((drinks * alcohol * 5.14) / (weight * r)) - (0.015 * hours);
+            }
+
+            // Display the result
+           if (bac === 0) {
+                output.innerHTML = "You haven't had any drinks yet. You are sober.";
+            }else{output.innerHTML = `Your BAC is ${bac.toFixed(4)}`;}
+   
+        }
+        unitForm.addEventListener('change',function() {
+            calculateBac();
+        });
+        metricBacForm.addEventListener('input', calculateBac);
+        imperialBacForm.addEventListener('input', calculateBac);
+
+    </script>
+</body>
+</html>
