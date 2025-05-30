@@ -3,61 +3,302 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bac Calculator</title>
+<style>
+    :root {
+        --primary-color: #2563eb;
+        --danger-color: #dc2626;
+        --success-color: #16a34a;
+        --bg-color: #f8fafc;
+        --card-bg: #ffffff;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-radius: 12px;
+        --spacing: 1.5rem;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg-color);
+        color: var(--text-primary);
+        line-height: 1.5;
+        margin: 0;
+        padding: 2rem;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .calculator-container {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        padding: 2rem;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    h1 {
+        color: var(--primary-color);
+        text-align: center;
+        font-size: 1.875rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    select, input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+
+    select:focus, input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    #result {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+        font-size: 1.125rem;
+    }
+
+    .status-legal {
+        color: var(--success-color);
+        font-weight: 600;
+    }
+
+    .status-illegal {
+        color: var(--danger-color);
+        font-weight: 600;
+    }
+
+    @media (max-width: 640px) {
+        body {
+            padding: 1rem;
+        }
+
+        .calculator-container {
+            padding: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+        }
+    }
+
+    /* Improved form layout */
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    /* Progressive disclosure animation */
+    .form-group {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.3s ease;
+    }
+
+    .form-group[style*="display: none"] {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+</style>
 </head>
 <body>
-    <h1>Simple Blood Alcohol level Calculator</h1>
-    <form id="unitForm">
-        <label for="unit">Unit:</label>
-        <select id="unit" name="unit">
-            <option value="Metric">Metric</option>
-            <option value="Imperial">Imperial</option>
-        </select>
-    </form>
-    
-    <form id="metricBacForm"> 
-        <label for="weight">Weight (kg):</label>
-        <input type="number" id="weight" name="weight" min="0" placeholder="0.00" max="1000"></input>
-        <br><br>
-        <label for="gender">Gender:</label>
-        <select id="gender" name="gender">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select>
-        <br><br>
-        <label for="drinks">Num of Drinks:</label>
-        <input type="number" id="drinks" name="drinks" min="0" placeholder="0" max="100"></input>
-        <br><br>
-        <label for="alcohol" id="alcohol-label" style="display:none;">Average ABV (%):</label>
-        <input type="number" id="alcohol" style="display:none;" name="alcohol" min="0" placeholder="0.00" max="100"></input>
-        <br><br>
-        <label for="hours" id="hours-label" style="display:none;">Hours:</label>
-        <input type="number" id="hours" style="display:none;" name="hours" min="0" placeholder="0" max="100"></input>
-        <br><br>
-    </form>
+    <div class="calculator-container">
+        <h1>Simple Blood Alcohol level Calculator</h1>
+        <form id="unitForm">
+            <label for="unit">Unit:</label>
+            <select id="unit" name="unit">
+                <option value="Metric">Metric</option>
+                <option value="Imperial">Imperial</option>
+            </select>
+        </form>
+        
+        <form id="metricBacForm"> 
+            <div class="form-group">
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight" name="weight" min="0" placeholder="0.00" max="1000" />
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="drinks">Num of Drinks:</label>
+                <input type="number" id="drinks" name="drinks" min="0" placeholder="0" max="100" />
+            </div>
+            <div class="form-group">
+                <label for="alcohol" id="alcohol-label" style="display:none;">Average ABV (%):</label>
+                <input type="number" id="alcohol" style="display:none;" name="alcohol" min="0" placeholder="0.00" max="100" />
+            </div>
+            <div class="form-group">
+                <label for="hours" id="hours-label" style="display:none;">Hours:</label>
+                <input type="number" id="hours" style="display:none;" name="hours" min="0" placeholder="0" max="100" />
+            </div>
+            <div class="form-group">
+                <label for="country" id="country-label" style="display:none;">Country:</label>
+                <input type="text" id="country" name="country" placeholder="Country" list="all_countries" style="display: none;">
+                <datalist id="all_countries" style="display: none;"> 
+                    <option value="Afghanistan">
+                    <option value="Albania">
+                    <option value="Algeria">
+                    <option value="Andorra">
+                    <option value="Angola">
+                    <option value="Argentina">
+                    <option value="Armenia">
+                    <option value="Australia">
+                    <option value="Austria">
+                    <option value="Azerbaijan">
+                    <option value="Bahamas">
+                    <option value="Bangladesh">
+                    <option value="Barbados">
+                    <option value="Belarus">
+                    <option value="Belgium">
+                    <option value="Belize">
+                    <option value="Benin">
+                    <option value="Bhutan">
+                    <option value="Bolivia">
+                    <option value="Bosnia and Herzegovina">
+                    <option value="Botswana">
+                    <option value="Brazil">
+                    <option value="Bulgaria">
+                    <option value="Cambodia">
+                    <option value="Cameroon">
+                    <option value="Canada">
+                    <option value="Chile">
+                    <option value="China">
+                    <option value="Colombia">
+                    <option value="Costa Rica">
+                    <option value="Croatia">
+                    <option value="Cuba">
+                    <option value="Cyprus">
+                    <option value="Czech Republic">
+                    <option value="Denmark">
+                    <option value="Dominican Republic">
+                    <option value="Ecuador">
+                    <option value="Egypt">
+                    <option value="Estonia">
+                    <option value="Ethiopia">
+                    <option value="Finland">
+                    <option value="France">
+                    <option value="Germany">
+                    <option value="Greece">
+                    <option value="Guatemala">
+                    <option value="Honduras">
+                    <option value="Hungary">
+                    <option value="Iceland">
+                    <option value="India">
+                    <option value="Indonesia">
+                    <option value="Iran">
+                    <option value="Ireland">
+                    <option value="Israel">
+                    <option value="Italy">
+                    <option value="Japan">
+                    <option value="Jordan">
+                    <option value="Kenya">
+                    <option value="Latvia">
+                    <option value="Lebanon">
+                    <option value="Lithuania">
+                    <option value="Luxembourg">
+                    <option value="Malaysia">
+                    <option value="Malta">
+                    <option value="Mexico">
+                    <option value="Morocco">
+                    <option value="Netherlands">
+                    <option value="New Zealand">
+                    <option value="Nigeria">
+                    <option value="Norway">
+                    <option value="Pakistan">
+                    <option value="Panama">
+                    <option value="Paraguay">
+                    <option value="Peru">
+                    <option value="Philippines">
+                    <option value="Poland">
+                    <option value="Portugal">
+                    <option value="Qatar">
+                    <option value="Romania">
+                    <option value="Russia">
+                    <option value="Saudi Arabia">
+                    <option value="Serbia">
+                    <option value="Singapore">
+                    <option value="Slovakia">
+                    <option value="Slovenia">
+                    <option value="South Africa">
+                    <option value="South Korea">
+                    <option value="Spain">
+                    <option value="Sri Lanka">
+                    <option value="Sweden">
+                    <option value="Switzerland">
+                    <option value="Thailand">
+                    <option value="Turkey">
+                    <option value="Ukraine">
+                    <option value="United Arab Emirates">
+                    <option value="United Kingdom">
+                    <option value="United States">
+                    <option value="Uruguay">
+                    <option value="Venezuela">
+                    <option value="Vietnam">
+                    <option value="Zimbabwe">
+                </datalist>
+            </div>
+        </form>
 
-    <form id="imperialBacForm" style="display:none;"> 
-        <label for="weight">Weight (lb):</label>
-        <input type="number" id="weight" name="weight" min="0" placeholder="0.00" max="1000"></input>
-        <br><br>
-        <label for="gender">Gender:</label>
-        <select id="gender" name="gender">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select>
-        <br><br>
-        <label for="drinks">Num of Drinks:</label>
-        <input type="number" id="drinks" name="drinks" min="0" placeholder="0" max="100"></input>
-        <br><br>
-        <label for="alcohol" id="alcohol-label" style="display:none;">Average ABV (%):</label>
-        <input type="number" id="alcohol" style="display:none;" name="alcohol" min="0" placeholder="0.00" max="100"></input>
-        <br><br>
-        <label for="hours" id="hours-label" style="display:none;">Hours:</label>
-        <input type="number" id="hours" style="display:none;" name="hours" min="0" placeholder="0" max="100"></input>
-        <br><br>
-    </form>
+        <form id="imperialBacForm" style="display:none;"> 
+            <div class="form-group">
+                <label for="weight">Weight (lb):</label>
+                <input type="number" id="weight" name="weight" min="0" placeholder="0.00" max="1000" />
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="drinks">Num of Drinks:</label>
+                <input type="number" id="drinks" name="drinks" min="0" placeholder="0" max="100" />
+            </div>
+            <div class="form-group">
+                <label for="alcohol" id="alcohol-label" style="display:none;">Average ABV (%):</label>
+                <input type="number" id="alcohol" style="display:none;" name="alcohol" min="0" placeholder="0.00" max="100" />
+            </div>
+            <div class="form-group">
+                <label for="hours" id="hours-label" style="display:none;">Hours:</label>
+                <input type="number" id="hours" style="display:none;" name="hours" min="0" placeholder="0" max="100" />
+            </div>
+            <div class="form-group">
+                <label for="country" id="country-label" style="display:none;">Country:</label>
+                <input type="text" id="country" name="country" placeholder="Country" list="all_countries" style="display: none;">
+            </div>
+        </form>
 
-    <div id="result">
-        <output id="output"></output>
+        <div id="result">
+            <output id="output"></output>
+        </div>
     </div>
 
     <script>
@@ -68,83 +309,246 @@
 
         unitForm.addEventListener('change', function() {
             if (unitForm.unit.value === 'Metric') {
-                metricBacForm.style.display = 'block';
+                metricBacForm.style.display = 'inline';
                 imperialBacForm.style.display = 'none';
             } else {
                 metricBacForm.style.display = 'none';
-                imperialBacForm.style.display = 'block';
+                imperialBacForm.style.display = 'inline';
             }
+
+            // Reset all form inputs
+            document.querySelectorAll('#metricBacForm input, #imperialBacForm input').forEach(input => {
+                input.value = '';
+            });
+
+            // Hide all conditional elements (alcohol, hours, country and their labels) in both forms
+            document.querySelectorAll('#metricBacForm #alcohol, #metricBacForm #hours, #metricBacForm #country, #imperialBacForm #alcohol, #imperialBacForm #hours, #imperialBacForm #country').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('#metricBacForm #alcohol-label, #metricBacForm #hours-label, #metricBacForm #country-label, #imperialBacForm #alcohol-label, #imperialBacForm #hours-label, #imperialBacForm #country-label').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+
+            // Clear result output
+            output.innerHTML = '';
         });
+
+        const bacLimitsByCountry = new Map([
+            ["Afghanistan", 0.00],
+            ["Albania", 0.05],
+            ["Algeria", 0.02],
+            ["Andorra", 0.05],
+            ["Angola", 0.06],
+            ["Argentina", 0.05],
+            ["Armenia", 0.08],
+            ["Australia", 0.05],
+            ["Austria", 0.05],
+            ["Azerbaijan", 0.00],
+            ["Bahamas", 0.08],
+            ["Bangladesh", 0.00],
+            ["Barbados", 0.08],
+            ["Belarus", 0.03],
+            ["Belgium", 0.05],
+            ["Belize", 0.08],
+            ["Benin", 0.05],
+            ["Bhutan", 0.08],
+            ["Bolivia", 0.05],
+            ["Bosnia and Herzegovina", 0.03],
+            ["Botswana", 0.08],
+            ["Brazil", 0.02],
+            ["Bulgaria", 0.05],
+            ["Cambodia", 0.05],
+            ["Cameroon", 0.08],
+            ["Canada", 0.05],
+            ["Chile", 0.03],
+            ["China", 0.02],
+            ["Colombia", 0.04],
+            ["Costa Rica", 0.05],
+            ["Croatia", 0.05],
+            ["Cuba", 0.05],
+            ["Cyprus", 0.05],
+            ["Czech Republic", 0.00],
+            ["Denmark", 0.05],
+            ["Dominican Republic", 0.05],
+            ["Ecuador", 0.03],
+            ["Egypt", 0.05],
+            ["Estonia", 0.02],
+            ["Ethiopia", 0.08],
+            ["Finland", 0.05],
+            ["France", 0.05],
+            ["Germany", 0.05],
+            ["Greece", 0.05],
+            ["Guatemala", 0.08],
+            ["Honduras", 0.07],
+            ["Hungary", 0.00],
+            ["Iceland", 0.05],
+            ["India", 0.03],
+            ["Indonesia", 0.00],
+            ["Iran", 0.00],
+            ["Ireland", 0.05],
+            ["Israel", 0.05],
+            ["Italy", 0.05],
+            ["Japan", 0.03],
+            ["Jordan", 0.08],
+            ["Kenya", 0.08],
+            ["Latvia", 0.05],
+            ["Lebanon", 0.05],
+            ["Lithuania", 0.04],
+            ["Luxembourg", 0.05],
+            ["Malaysia", 0.08],
+            ["Malta", 0.08],
+            ["Mexico", 0.08],
+            ["Morocco", 0.06],
+            ["Netherlands", 0.05],
+            ["New Zealand", 0.05],
+            ["Nigeria", 0.05],
+            ["Norway", 0.02],
+            ["Pakistan", 0.00],
+            ["Panama", 0.00],
+            ["Paraguay", 0.08],
+            ["Peru", 0.05],
+            ["Philippines", 0.05],
+            ["Poland", 0.02],
+            ["Portugal", 0.05],
+            ["Qatar", 0.00],
+            ["Romania", 0.00],
+            ["Russia", 0.00],
+            ["Saudi Arabia", 0.00],
+            ["Serbia", 0.03],
+            ["Singapore", 0.08],
+            ["Slovakia", 0.00],
+            ["Slovenia", 0.05],
+            ["South Africa", 0.05],
+            ["South Korea", 0.05],
+            ["Spain", 0.05],
+            ["Sri Lanka", 0.08],
+            ["Sweden", 0.02],
+            ["Switzerland", 0.05],
+            ["Thailand", 0.05],
+            ["Turkey", 0.05],
+            ["Ukraine", 0.02],
+            ["United Arab Emirates", 0.00],
+            ["United Kingdom", 0.08],
+            ["United States", 0.08],
+            ["Uruguay", 0.03],
+            ["Venezuela", 0.08],
+            ["Vietnam", 0.00],
+            ["Zimbabwe", 0.08]
+        ]);
 
         function calculateBac() {
-            const weight = parseFloat(document.getElementById('weight').value);
-            const gender = document.getElementById('gender').value;
-            const drinks = parseInt(document.getElementById('drinks').value);
-            const alcohol = parseFloat(document.getElementById('alcohol').value);
-            const hours = parseFloat(document.getElementById('hours').value);
-            let bac;
-            // Validate inputs
-            if (isNaN(weight) || isNaN(drinks)) {
-                output.innerHTML = "Please enter valid numbers.";
-                return;
-            }
-            if (drinks === 0){
-                document.getElementById('alcohol-label').style.display = 'none';
-                document.getElementById('alcohol').style.display = 'none';
-                document.getElementById('hours-label').style.display = 'none';
-                document.getElementById('hours').style.display = 'none';
-                document.getElementById('alcohol').value = '';
-                document.getElementById('hours').value = '';
-            }
-        
-            if (drinks < 0 || weight < 0) {
-                output.innerHTML = "Please enter valid numbers.";
-                return;
-            }
-            if (drinks === 0 && weight >= 0) {
-                output.innerHTML = "You haven't had any drinks yet. You are sober.";
-                return;
-            }else if (weight === 0 && drinks > 0) {
-                output.innerHTML = "Please enter a valid weight.";
-                return;
-            }else if (drinks > 0){
-                document.getElementById('alcohol-label').style.display = 'inline';
-                document.getElementById('alcohol').style.display = 'inline';
-                if (isNaN(alcohol) || alcohol < 0 || alcohol > 100) {
-                    output.innerHTML = "Please enter a valid alcohol by volume (ABV) percentage.";
-                    return;
-                }else if (alcohol >= 0 && alcohol <= 100) {
-                    document.getElementById('hours-label').style.display = 'inline';
-                    document.getElementById('hours').style.display = 'inline';
-                    if (isNaN(hours) || hours < 0) {
-                        output.innerHTML = "Please enter a valid number of hours.";
-                        return;
-                    }
-                }
-            }
+            const activeForm = unitForm.unit.value === 'Metric' ? metricBacForm : imperialBacForm;
+            const weight = parseFloat(activeForm.querySelector('#weight').value);
+            const gender = activeForm.querySelector('#gender').value;
+            const drinks = parseInt(activeForm.querySelector('#drinks').value);
+            const alcohol = parseFloat(activeForm.querySelector('#alcohol').value);
+            const hours = parseFloat(activeForm.querySelector('#hours').value);
+            const country = activeForm.querySelector('#country').value;
+            
 
-
-
-            if (unitForm.unit.value === 'Imperial') {
-            let r = (gender === "Male" ? 0.73 : 0.66);
-            // Calculate BAC: ((drinks * abv * 5.14) / (weight * r)) - (0.015 * hours)
-            bac = ((drinks * alcohol * 5.14) / (weight * r)) - (0.015 * hours);
-            }else {
-                let r = (gender === "Male" ? 0.68 : 0.55);
-                bac = ((drinks * alcohol * 5.14) / (weight * r)) - (0.015 * hours);
-            }
-
-            // Display the result
-           if (bac === 0) {
-                output.innerHTML = "You haven't had any drinks yet. You are sober.";
-            }else{output.innerHTML = `Your BAC is ${bac.toFixed(4)}`;}
-   
+            if (isNaN(weight) || weight <= 0 || weight > 1000 || isNaN(drinks) || drinks < 0 || drinks > 100) {
+            output.innerHTML = `
+                <p>Please enter valid values:</p>
+                <p>Weight must be a number between 1 and 1000 kg/lb
+                <br>Number of drinks must be between 0 and 100.</p>
+            `;
+            activeForm.querySelector('#alcohol-label').style.display = 'none';
+            activeForm.querySelector('#alcohol').style.display = 'none';
+            activeForm.querySelector('#alcohol').value = '';
+            activeForm.querySelector('#hours-label').style.display = 'none';
+            activeForm.querySelector('#hours').style.display = 'none';
+            activeForm.querySelector('#hours').value = '';
+            activeForm.querySelector('#country-label').style.display = 'none';
+            activeForm.querySelector('#country').style.display = 'none';
+            return;
         }
-        unitForm.addEventListener('change',function() {
-            calculateBac();
+
+        // Show or hide alcohol field depending on drinks
+        if (drinks === 0) {
+            activeForm.querySelector('#alcohol-label').style.display = 'none';
+            activeForm.querySelector('#alcohol').style.display = 'none';
+            activeForm.querySelector('#hours-label').style.display = 'none';
+            activeForm.querySelector('#hours').style.display = 'none';
+            activeForm.querySelector('#country-label').style.display = 'none';
+            activeForm.querySelector('#country').style.display = 'none';
+            output.innerHTML = "You haven't had any drinks yet. You are sober.";
+            return;
+        } else {
+            activeForm.querySelector('#alcohol-label').style.display = 'inline';
+            activeForm.querySelector('#alcohol').style.display = 'inline';
+        }
+
+        if (alcohol === 0) {
+            output.innerHTML = "You haven't had any alcoholic drinks yet, you are sober.";
+            activeForm.querySelector('#hours-label').style.display = 'none';
+            activeForm.querySelector('#hours').style.display = 'none';
+            activeForm.querySelector('#country-label').style.display = 'none';
+            activeForm.querySelector('#country').style.display = 'none';
+            return;
+        }else if (isNaN(alcohol) || alcohol < 0 || alcohol > 100) {
+            output.innerHTML = "Please enter a valid ABV %.";
+            activeForm.querySelector('#hours-label').style.display = 'none';
+            activeForm.querySelector('#hours').style.display = 'none';
+            activeForm.querySelector('#country-label').style.display = 'none';
+            activeForm.querySelector('#country').style.display = 'none';
+            return;
+        } else {
+            activeForm.querySelector('#hours-label').style.display = 'inline';
+            activeForm.querySelector('#hours').style.display = 'inline';
+        }
+
+        // Validate hours input and show/hide country selection
+        if (isNaN(hours) || hours < 0 || hours > 100) {
+            output.innerHTML = "Please enter a valid number of hours.";
+            return;
+        } else {
+            // Show country selection after valid hours input
+            activeForm.querySelector('#country-label').style.display = 'inline';
+            activeForm.querySelector('#country').style.display = 'inline';
+        }
+
+        // Calculate BAC based on gender and unit system
+        let r; // Alcohol distribution ratio
+        let bac;
+        if (unitForm.unit.value === 'Imperial') {
+            // Imperial units calculation (r values from Widmark formula)
+            r = (gender === "Male" ? 0.73 : 0.66);
+            bac = ((drinks * alcohol * 5.14) / (weight * r)) - (0.015 * hours);
+        } else {
+            // Metric units calculation
+            r = (gender === "Male" ? 0.68 : 0.55);
+            bac = ((drinks * alcohol * 5.14) / (weight * r)) - (0.015 * hours);
+        }
+
+        // Ensure BAC is not negative
+        if (bac < 0) {
+            bac = 0;
+        }
+
+        // Display results and check against country-specific limits
+        if (country.trim() !== '' && bacLimitsByCountry.has(country.trim())) {
+            const limit = bacLimitsByCountry.get(country.trim());
+            // Show BAC and legal status based on country limit
+            output.innerHTML = `
+                Your BAC is: ${bac.toFixed(4)}<br>
+                Status: ${bac <= limit ? 
+                    '<span class="status-legal">Legal to drive</span>' : 
+                    '<span class="status-illegal">ILLEGAL to drive</span>'}
+            `;
+        } else {
+            // Show BAC only if no country selected
+            output.innerHTML = `Your BAC is: ${bac.toFixed(4)}<br>`;
+        }
+    }
+
+        // Add event listeners for real-time calculation
+        metricBacForm.addEventListener('input', () => {
+            if (unitForm.unit.value === 'Metric') calculateBac();
         });
-        metricBacForm.addEventListener('input', calculateBac);
-        imperialBacForm.addEventListener('input', calculateBac);
+        imperialBacForm.addEventListener('input', () => {
+            if (unitForm.unit.value === 'Imperial') calculateBac();
+        });
 
     </script>
 </body>
