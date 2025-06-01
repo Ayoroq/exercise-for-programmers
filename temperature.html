@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .converter-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.875rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .unit {
+            position: absolute;
+            right: 1rem;
+            top: 2.5rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+
+            .converter-container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="converter-container">
+        <h1>Temperature Converter</h1>
+        
+        <div class="input-group">
+            <label for="celsiusInput">Celsius</label>
+            <input type="number" id="celsiusInput" placeholder="0.00" step="0.01" required>
+            <span class="unit">&deg;C</span>
+        </div>
+
+        <div class="input-group">
+            <label for="fahrenheitInput">Fahrenheit</label>
+            <input type="number" id="fahrenheitInput" placeholder="32.00" step="0.01" required>
+            <span class="unit">&deg;F</span>
+        </div>
+
+        <div class="input-group">
+            <label for="kelvinInput">Kelvin</label>
+            <input type="number" id="kelvinInput" placeholder="273.15" step="0.01" required>
+            <span class="unit">K</span>
+        </div>
+    </div>
+
+    <script>
+        // Set initial values for all inputs
+        document.getElementById('celsiusInput').value = 0;        // 0°C
+        document.getElementById('fahrenheitInput').value = 32;    // 32°F (freezing point)
+        document.getElementById('kelvinInput').value = 273.15;    // 273.15K (absolute zero)
+
+        // Convert temperatures when Celsius is changed
+        function convertFromCelsius() {
+            const celsius = parseFloat(document.getElementById('celsiusInput').value);
+            if (!isNaN(celsius)) {
+                // Convert to Fahrenheit: °F = (°C × 9/5) + 32
+                const fahrenheit = (celsius * 9/5) + 32;
+                // Convert to Kelvin: K = °C + 273.15
+                const kelvin = celsius + 273.15;
+                // Update other inputs with converted values
+                document.getElementById('fahrenheitInput').value = fahrenheit.toFixed(2);
+                document.getElementById('kelvinInput').value = kelvin.toFixed(2);
+            }
+        }
+
+        // Convert temperatures when Fahrenheit is changed
+        function convertFromFahrenheit() {
+            const fahrenheit = parseFloat(document.getElementById('fahrenheitInput').value);
+            if (!isNaN(fahrenheit)) {
+                // Convert to Celsius: °C = (°F - 32) × 5/9
+                const celsius = (fahrenheit - 32) * 5/9;
+                // Convert to Kelvin: K = °C + 273.15
+                const kelvin = celsius + 273.15;
+                // Update other inputs with converted values
+                document.getElementById('celsiusInput').value = celsius.toFixed(2);
+                document.getElementById('kelvinInput').value = kelvin.toFixed(2);
+            }
+        }
+
+        // Convert temperatures when Kelvin is changed
+        function convertFromKelvin() {
+            const kelvin = parseFloat(document.getElementById('kelvinInput').value);
+            if (!isNaN(kelvin)) {
+                // Convert to Celsius: °C = K - 273.15
+                const celsius = kelvin - 273.15;
+                // Convert to Fahrenheit: °F = (°C × 9/5) + 32
+                const fahrenheit = (celsius * 9/5) + 32;
+                // Update other inputs with converted values
+                document.getElementById('celsiusInput').value = celsius.toFixed(2);
+                document.getElementById('fahrenheitInput').value = fahrenheit.toFixed(2);
+            }
+        }
+
+        // Add event listeners to update values when any input changes
+        document.getElementById('celsiusInput').addEventListener('input', convertFromCelsius);
+        document.getElementById('fahrenheitInput').addEventListener('input', convertFromFahrenheit);
+        document.getElementById('kelvinInput').addEventListener('input', convertFromKelvin);
+    </script>
+</body>
+</html>
