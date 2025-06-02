@@ -1,0 +1,143 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bmi Calculator</title>
+</head>
+<style>
+    :root {
+        --primary-colour: #2563eb;
+        --danger-colour: #dc2626;
+        --success-colour: #16a34a;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        font: 1.2rem Arial, sans-serif;
+        text-align: center;
+    }
+    .status-normal {
+        color: var(--success-colour);
+    }
+    .status-underweight {
+        color: var(--danger-colour);
+    }
+    .status-overweight {
+        color: var(--danger-colour);
+    }
+</style>
+<body>
+    <h1>Simple BMI Calculator</h1>
+    <div>
+        <label for="unit"></label>
+        <select id="unit">
+            <option value="metric">Metric (kg, cm)</option>
+            <option value="imperial">Imperial (lbs, in)</option>            
+        </select><br><br>
+    </div>
+    <div id="metric" style="display: block;">
+        <label for="weight">Weight:</label>
+        <input type="range" id="metricWeight" min="30" max="300" value="70" step="1">
+        <span id="weightValue">70</span> kg<br><br>
+
+        <label for="height">Height:</label>
+        <input type="range" id="metricHeight" min="40" max="300" value="170" step="1">
+        <span id="heightValue">170</span> cm<br><br>
+    </div>
+    <div id="imperial" style="display: none;">
+        <label for="weight">Weight:</label>
+        <input type="range" id="imperialWeight" min="66" max="660" value="154" step="1">
+        <span id="weightValue">154</span> lbs<br><br>
+
+        <label for="height">Height:</label>
+        <input type="range" id="imperialHeight" min="16" max="118" value="67" step="1">
+        <span id="heightValue">67</span> in<br><br>
+    </div>
+    <div id="result">
+        <output id="output"></output>
+    </div>
+
+</body>
+<script>
+    // Function to update the displayed value of the slider
+    function updateSliderValue(sliderId, valueId) {
+        const slider = document.getElementById(sliderId);
+        const valueDisplay = document.getElementById(valueId);
+        slider.addEventListener('input', function() {
+            valueDisplay.textContent = this.value;
+        });
+    }
+    // Function to toggle visibility of metric and imperial inputs
+    function toggleUnit() {
+        const unit = document.getElementById('unit').value;
+        const metricDiv = document.getElementById('metric');
+        const imperialDiv = document.getElementById('imperial');
+
+        if (unit === 'metric') {
+            metricDiv.style.display = 'block';
+            imperialDiv.style.display = 'none';
+        } else {
+            metricDiv.style.display = 'none';
+            imperialDiv.style.display = 'block';
+        }
+    }
+    
+    class BmiCalculator {
+        constructor(weight, height) {
+            this.weight = 0;
+            this.height = 0;
+            this.unit = document.getElementById('unit').value || 'metric'; // Default unit
+        }
+
+        calculateBmi() {
+            if (this.unit === 'imperial') {
+                this.weight = document.getElementById('imperialWeight').value;
+                this.height = document.getElementById('imperialHeight').value;
+            console.log( (this.weight / (this.height * this.height)) * 703)
+                return (this.weight / (this.height * this.height)) * 703;
+            } else if (this.unit === 'metric') {
+                this.weight = document.getElementById('metricWeight').value;
+                this.height = document.getElementById('metricHeight').value;
+                console.log( (this.weight / (this.height * this.height)) * 10000)   
+            return (this.weight / (this.height * this.height)) * 10000;
+            }
+        }
+
+        getCategory(bmi) { 
+            if (bmi >= 18.5 && bmi < 24.9) {
+                return 'normal';
+            } else if (bmi < 18.5) {
+                return 'underweight';
+            } else {
+                return "overweight";
+            }
+        }
+        displayResult() {
+            const bmi = this.calculateBmi();
+            const category = this.getCategory(bmi);
+            const output = document.getElementById('output');
+            output.textContent = `Your BMI is ${bmi.toFixed(2)} (${category})`;
+            console.log(category);
+            output.className = `status-${category}`;
+        }
+    }
+
+    // Event listener for unit selection change
+    document.getElementById('unit').addEventListener('change', toggleUnit);
+    
+    bmi_calculator = new BmiCalculator();
+
+    // Update slider values on input
+    document.getElementById('metricWeight').addEventListener('input', () => bmi_calculator.displayResult());
+    document.getElementById('metricHeight').addEventListener('input', () => bmi_calculator.displayResult());
+
+    updateSliderValue('metricWeight', 'weightValue');
+    updateSliderValue('metricHeight', 'heightValue');
+    
+</script>
+</html>
