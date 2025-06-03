@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,68 +11,123 @@
         --danger-colour: #dc2626;
         --success-colour: #16a34a;
     }
+
     body {
         font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
+        background-color: #eeebeb;
         color: #333;
         margin: 0;
         padding: 20px;
     }
+
     h1 {
-        font: 1.2rem Arial, sans-serif;
+        font-size: 1.2rem;
+        font-family:  cursive;
         text-align: center;
     }
+
+
     .status-normal {
         color: var(--success-colour);
     }
+
     .status-underweight {
         color: var(--danger-colour);
     }
+
     .status-overweight {
         color: var(--danger-colour);
     }
+
+    .badge {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    .status-normal {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-overweight,
+    .status-underweight {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+
+    .slider-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+
+    .slider-row label {
+        width: 45px;
+    }
 </style>
+
 <body>
     <h1>Simple BMI Calculator</h1>
     <div>
-        <label for="unit"></label>
+        <label for="unit">Select Unit:</label>
         <select id="unit">
             <option value="metric">Metric (kg, cm)</option>
-            <option value="imperial">Imperial (lbs, in)</option>            
+            <option value="imperial">Imperial (lbs, in)</option>
         </select><br><br>
     </div>
-    <div id="metric" style="display: block;">
+    <div id="metric" style="display: inline;">
         <label for="weight">Weight:</label>
         <input type="range" id="metricWeight" min="30" max="300" value="70" step="1">
-        <span id="weightValue">70</span> kg<br><br>
+        <span id="metricWeightValue">70</span> kg<br><br>
 
         <label for="height">Height:</label>
         <input type="range" id="metricHeight" min="40" max="300" value="170" step="1">
-        <span id="heightValue">170</span> cm<br><br>
+        <span id="metricHeightValue">170</span> cm<br><br>
     </div>
     <div id="imperial" style="display: none;">
         <label for="weight">Weight:</label>
         <input type="range" id="imperialWeight" min="66" max="660" value="154" step="1">
-        <span id="weightValue">154</span> lbs<br><br>
+        <span id="imperialWeightValue">154</span> lbs<br><br>
 
-        <label for="height">Height:</label>
-        <input type="range" id="imperialHeight" min="16" max="118" value="67" step="1">
-        <span id="heightValue">67</span> in<br><br>
+        <div class="slider-row">
+            <label for="imperialFeet">Height:</label>
+            <input type="range" id="imperialFeet" min="4" max="8" value="5" step="1">
+            <span id="imperialFeetValue">5</span><span>'</span>
+        </div>
+
+        <div class="slider-row">
+            <label for="imperialInches"></label>
+            <input type="range" id="imperialInches" min="0" max="11" value="6" step="1">
+            <span id="imperialInchesValue">6</span><span>"</span>
+        </div>
     </div>
+
     <div id="result">
-        <output id="output"></output>
+        <output id="output">This is where the result will be displayed.</output>
     </div>
+    <div id="bmiCategory" class="badge"></div>
 
 </body>
 <script>
-    // Function to update the displayed value of the slider
+    /**
+     * Function to update the displayed value of the slider.
+     * @param {string} sliderId - The ID of the slider input element.
+     * @param {string} valueId - The ID of the element where the slider value will be displayed.
+     * This function adds an event listener to the slider to update the displayed value dynamically as the slider is moved.
+     */
     function updateSliderValue(sliderId, valueId) {
         const slider = document.getElementById(sliderId);
         const valueDisplay = document.getElementById(valueId);
-        slider.addEventListener('input', function() {
+        slider.addEventListener('input', function () {
             valueDisplay.textContent = this.value;
         });
     }
+
     // Function to toggle visibility of metric and imperial inputs
     function toggleUnit() {
         const unit = document.getElementById('unit').value;
@@ -86,29 +142,27 @@
             imperialDiv.style.display = 'block';
         }
     }
-    
+
     class BmiCalculator {
-        constructor(weight, height) {
-            this.weight = 0;
-            this.height = 0;
-            this.unit = document.getElementById('unit').value || 'metric'; // Default unit
+        constructor() {
         }
 
         calculateBmi() {
-            if (this.unit === 'imperial') {
+            const unit = document.getElementById('unit').value;
+            if (unit === 'imperial') {
                 this.weight = document.getElementById('imperialWeight').value;
-                this.height = document.getElementById('imperialHeight').value;
-            console.log( (this.weight / (this.height * this.height)) * 703)
+                let feet = parseInt(document.getElementById('imperialFeet').value, 10);
+                let inches = parseInt(document.getElementById('imperialInches').value, 10);
+                this.height = (feet * 12) + inches;
                 return (this.weight / (this.height * this.height)) * 703;
-            } else if (this.unit === 'metric') {
+            } else {
                 this.weight = document.getElementById('metricWeight').value;
                 this.height = document.getElementById('metricHeight').value;
-                console.log( (this.weight / (this.height * this.height)) * 10000)   
-            return (this.weight / (this.height * this.height)) * 10000;
+                return (this.weight / (this.height * this.height)) * 10000;
             }
         }
 
-        getCategory(bmi) { 
+        getCategory(bmi) {
             if (bmi >= 18.5 && bmi < 24.9) {
                 return 'normal';
             } else if (bmi < 18.5) {
@@ -121,23 +175,43 @@
             const bmi = this.calculateBmi();
             const category = this.getCategory(bmi);
             const output = document.getElementById('output');
-            output.textContent = `Your BMI is ${bmi.toFixed(2)} (${category})`;
-            console.log(category);
+            let message = `Your BMI is ${bmi.toFixed(2)}.`;
+
+            if (category === 'normal') {
+                message += ' You are within the ideal weight range.';
+            } else {
+                message += ` You are ${category}. You should see your doctor.`;
+            }
+            output.textContent = message;
             output.className = `status-${category}`;
+            const categoryDisplay = document.getElementById('bmiCategory');
+            categoryDisplay.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+            categoryDisplay.className = `badge status-${category}`;
         }
     }
 
+    // updating slider values when sliding is done
+    updateSliderValue('metricWeight', 'metricWeightValue');
+    updateSliderValue('metricHeight', 'metricHeightValue');
+    updateSliderValue('imperialWeight', 'imperialWeightValue');
+    updateSliderValue('imperialFeet', 'imperialFeetValue');
+    updateSliderValue('imperialInches', 'imperialInchesValue')
+
     // Event listener for unit selection change
-    document.getElementById('unit').addEventListener('change', toggleUnit);
-    
-    bmi_calculator = new BmiCalculator();
+    document.getElementById('unit').addEventListener('change', function () {
+        toggleUnit();
+        const output = document.getElementById('output');
+        output.textContent = '';
+        output.className = '';
+    });
 
-    // Update slider values on input
-    document.getElementById('metricWeight').addEventListener('input', () => bmi_calculator.displayResult());
-    document.getElementById('metricHeight').addEventListener('input', () => bmi_calculator.displayResult());
+    bmiCalculator = new BmiCalculator();
 
-    updateSliderValue('metricWeight', 'weightValue');
-    updateSliderValue('metricHeight', 'heightValue');
-    
+    ['metricWeight', 'metricHeight', 'imperialWeight', 'imperialFeet', 'imperialInches']
+        .forEach(id => {
+            document.getElementById(id).addEventListener('input', () => bmiCalculator.displayResult());
+        });
+
 </script>
+
 </html>
