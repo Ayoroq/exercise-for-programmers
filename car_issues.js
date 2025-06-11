@@ -322,45 +322,74 @@ console.log(car.diagnose());
 
 
 
+// Nested decision tree object representing car diagnostic logic.
+// Each branch corresponds to a yes/no question and leads to further questions or final advice.
+// Mot of the code below was generated after finishing my initial approach above. 
+// sort of a way to see how this could be implemented better
+
 const diagnosticRules = {
     silent: {
+        // Root of the tree: car is silent when key is turned
         condition: 'turnKey',
         yes: {
-            question: 'Are the battery terminals corroded?',
-            yes: 'Clean terminals and try starting again.',
-            no: 'Replace cables and try again.'
+            // 'yes' path: user answered 'y' to previous question
+            question: 'Are the battery terminals corroded? ',
+            yes: 'Clean terminals and try starting again.', // 'yes' path: user answered 'y'
+            no: 'Replace cables and try again.' // 'no' path: user answered 'n'
         },
         no: {
-            question: 'Does the car make a clicking noise?',
-            yes: 'Replace the battery.',
+            // 'no' path: user answered 'n' to previous question
+            question: 'Does the car make a clicking noise? ',
+            yes: 'Replace the battery.', // 'yes' path: user answered 'y'
             no: {
-                question: 'Does the car crank up but fail to start?',
-                yes: 'Check spark plug connections.',
+                // 'no' path: user answered 'n'
+                question: 'Does the car crank up but fail to start? ',
+                yes: 'Check spark plug connections.', // 'yes' path: user answered 'y'
                 no: {
-                    question: 'Does the engine start and then die?',
+                    // 'no' path: user answered 'n'
+                    question: 'Does the engine start and then die? ',
                     yes: {
-                        question: 'Does your car have fuel injection?',
-                        yes: 'Get it in for service.',
-                        no: 'Check to ensure the choke is opening and closing.'
+                        // 'yes' path: user answered 'y'
+                        question: 'Does your car have fuel injection? ',
+                        yes: 'Get it in for service.', // 'yes' path: user answered 'y'
+                        no: 'Check to ensure the choke is opening and closing.' // 'no' path: user answered 'n'
                     },
-                    no: 'Get it in for service.'
+                    no: 'Get it in for service.' // 'no' path: user answered 'n'
                 }
             }
         }
     }
 };
 
+// Class that encapsulates the rule traversal and user interaction logic
 class DiagnosticEngine {
     constructor(rules) {
         this.engine = new Engine(undefined, { allowUndefinedFacts: true });
         this.rules = rules;
     }
 
+    
+    async traverseRules(node, answer) {
+        // Base case: we've reached a final advice message
+        if (typeof node[answer] === 'string') {
+            return node[answer];
+        }
+
+        // Recursive case: ask the next question and continue traversing
+        if (node[answer]?.question) {
+            const nextAnswer = await this.yesOrNo(node[answer].question);
+            return this.traverseRules(node[answer], nextAnswer);
+        }
+
+        // Fallback in case of unexpected input or structure
+        return 'Get it in for service.';
+    }
+
     async processDiagnostic() {
         try {
+            // Begin diagnosis with the initial question
             const start = await this.yesOrNo('Is the car silent when you turn the key? ');
             let currentNode = this.rules.silent;
-            
             return await this.traverseRules(currentNode, start);
         } catch (error) {
             console.error('Diagnostic error:', error);
@@ -368,29 +397,19 @@ class DiagnosticEngine {
         }
     }
 
-    async traverseRules(node, answer) {
-        if (typeof node[answer] === 'string') {
-            return node[answer];
-        }
-
-        if (node[answer]?.question) {
-            const nextAnswer = await this.yesOrNo(node[answer].question);
-            return this.traverseRules(node[answer], nextAnswer);
-        }
-
-        return 'Get it in for service.';
-    }
-
     async yesOrNo(question) {
+        let answer = ''
+        // Helper method to ensure user answers with 'y' or 'n'
         while (true) {
-            const answer = prompt(question).toLowerCase();
-            if (answer === 'y' || answer === 'n') return answer;
+            answer = prompt(question).toLowerCase();
+            if (answer === 'y' || answer === 'n') return answer === 'y' ? 'yes' : 'no';
             console.log("Please enter 'y' or 'n'.");
         }
     }
 }
 
 async function main() {
+    // Initialize and run the diagnostic process
     try {
         const diagnostic = new DiagnosticEngine(diagnosticRules);
         const result = await diagnostic.processDiagnostic();
@@ -401,6 +420,4 @@ async function main() {
     }
 }
 
-if (require.main === module) {
-    main();
-}
+main();
