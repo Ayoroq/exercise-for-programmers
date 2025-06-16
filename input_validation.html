@@ -1,0 +1,134 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Validation</title>
+</head>
+<style>
+.invalid {
+  border: 2px solid red;
+}
+</style>
+<body>
+    <h1>Input Validation</h1>
+    <div>
+        <form id="inputForm" class="input-form">
+            <label for="firstname">First Name</label>
+            <input type="text" id="firstname" placeholder="Enter your first name">
+            <br><br>
+            <label for="lastname">Last Name</label>
+            <input type="text" id="lastname" placeholder="Enter your last name">
+            <br><br>
+            <label for="zipcode">Zip Code</label>
+            <input type="text" id="zipcode" placeholder="Enter your zip code">
+            <br><br>
+            <label for="id">Employee ID</label>
+            <input type="text" id="id" placeholder="Enter Employee ID">
+        </form>
+    </div>
+    <div id="result"></div>
+</body>
+<script>
+    function validateFirstName(firstName){
+    return /^[a-z]{2,}$/i.test(firstName);
+    }
+
+    function validateLastName(lastName){
+        return /^[a-z]{2,}$/i.test(lastName);
+    }
+
+    function validateId(id){
+        return /^[a-z]{2}-\d{4}$/i.test(id);
+    }
+
+    function validateZipCode(zipCode){
+        return /^\d{5}$/.test(zipCode);
+    }
+            
+    function validateInput(firstName, lastName, zipCode, id){
+    let valid = true;
+    const errors = [];
+
+    // Validate first name
+    if (!validateFirstName(firstName)){
+        if (firstName === ''){
+            errors.push("The first name must be filled in.");
+        } else {
+            errors.push(`"${firstName}" is not a valid first name. It is too short.`);
+        }
+        valid = false;
+    }
+
+    // Validate last name
+    if (!validateLastName(lastName)){
+        if (lastName === ''){
+            errors.push("The last name must be filled in.");
+        } else {
+            errors.push(`"${lastName}" is not a valid last name. It is too short.`);
+        }
+        valid = false;
+    }
+
+    // Validate ZIP code with specific error messages
+    if (!validateZipCode(zipCode)){
+        if (zipCode === '') {
+            errors.push("The ZIP code must be filled in.");
+        } else if (/[a-z]/i.test(zipCode)) {
+            errors.push("The ZIP code must be numeric.");
+        } else {
+            errors.push("The ZIP code must be exactly 5 digits.");
+        }
+        valid = false;
+    }
+
+    // Validate employee ID
+    if (!validateId(id)){
+        if (id === ''){
+            errors.push("The employee ID must be filled in.");
+        } else {
+        errors.push(`"${id}" is not a valid ID.`);
+        }
+        valid = false;
+    }
+
+    // Display all errors or success message
+    if (errors.length > 0) {
+        return (errors.join("\n"));
+    } else {
+        return ("There were no errors found.");
+    }
+    }
+
+    function main(){
+        let firstName = document.getElementById("firstname").value.trim()
+        let lastName = document.getElementById("lastname").value.trim()
+        let zipCode = document.getElementById("zipcode").value
+        let id = document.getElementById("id").value
+        let result = document.getElementById("result");
+        let valid = validateInput(firstName, lastName, zipCode, id);
+        
+        result.innerText = valid
+    }
+
+    document.getElementById("inputForm").addEventListener("input", function(event){
+        event.preventDefault();
+        main();
+    });
+
+    document.getElementById("firstname").addEventListener("blur", function () {
+      this.classList.toggle("invalid", !validateFirstName(this.value.trim()));
+    });
+
+    document.getElementById("lastname").addEventListener("blur", function () {
+      this.classList.toggle("invalid", !validateLastName(this.value.trim()));
+    });
+
+    document.getElementById("zipcode").addEventListener("blur", function () {
+      this.classList.toggle("invalid", !validateZipCode(this.value.trim()));
+    });
+
+    document.getElementById("id").addEventListener("blur", function () {
+      this.classList.toggle("invalid", !validateId(this.value.trim()));
+    });
+</script>
+</html>
