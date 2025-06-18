@@ -1,0 +1,108 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #ebebeb;
+        margin: 20px;
+    }
+    .result{
+        color: black; 
+        background-color: #f9f9f9; 
+        text-align: center; 
+        font-size: 14px;
+        font-weight: lighter; 
+        padding: 10px; 
+        width: 300px;
+        border: 1px solid #cec8c8;
+        border-radius: 5px;
+        margin: 20px auto;
+        display: block;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    form {
+        max-width: 400px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+</style>
+<body>
+    <div>
+        <form>
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" min="0" max="120" required>
+            <br><br>
+            <label for="restingHeartRate">Resting Heart Rate</label>
+            <input type="number" id="restingHeartRate" name="restingHeartRate" min="30" max="200" required>
+            <br><br>
+            <label for="intensity">Intensity</label>
+            <input type="range" id="intensity" name="intensity" min="55" max="95" value="70" step="5" required>
+            <output id="intensityOutput">70</output>%
+        </form>
+    </div>
+    <div id="result" class="result">
+        Please enter your age and resting heart rate.
+    </div>
+    <script>
+        
+        // Calculate target heart rate using Karvonen formula
+        function calculateKarvonenHeartRate(age, restingHeartRate, intensity) {
+            const maxHeartRate = 220 - age;
+            const heartRateReserve = maxHeartRate - restingHeartRate;
+            const targetHeartRate = restingHeartRate + (heartRateReserve * intensity);
+            return Math.round(targetHeartRate);
+        }
+
+        // Validate input values
+        function isValidInput(age, restingHeartRate) {
+            if (isNaN(age) || isNaN(restingHeartRate)) {
+                return "Please enter valid numeric values for age and resting heart rate.";
+            }
+            if (isNaN(age) || age < 0 || age > 120) {
+                return "Please enter a valid age between 0 and 120.";
+            }
+            if (isNaN(restingHeartRate) || restingHeartRate < 30 || restingHeartRate > 200) {
+                return "Please enter a valid resting heart rate between 30 and 200 bpm.";
+            }
+            return null;
+        }
+
+        // Calculate and display the target heart rate when inputs change
+        function updateHeartRate() {
+            const age = parseInt(document.getElementById('age').value);
+            const restingHeartRate = parseInt(document.getElementById('restingHeartRate').value);
+            const intensity = parseInt(document.getElementById('intensity').value) / 100;
+            
+            const errorMessage = isValidInput(age, restingHeartRate);
+
+            if (errorMessage) {
+                document.getElementById('result').innerHTML = errorMessage;
+                return;
+            }
+            const targetHeartRate = calculateKarvonenHeartRate(age, restingHeartRate, intensity);
+            document.getElementById('result').innerHTML = `Your target heart rate is: <strong>${targetHeartRate} bpm</strong>`;
+        }
+
+        // Event listeners for input changes
+        document.getElementById('age').addEventListener('input', updateHeartRate);
+        document.getElementById('restingHeartRate').addEventListener('input', updateHeartRate);
+         // Update the output when the intensity slider is moved
+        document.getElementById('intensity').addEventListener('input', function() {
+            document.getElementById('intensityOutput').textContent = this.value;
+            updateHeartRate();
+        });
+    </script>
+</body>
+</html>
