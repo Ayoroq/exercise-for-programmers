@@ -1,0 +1,160 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication table</title>
+</head>
+<style>
+    :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #e74c3c;
+        --background-color: #ecf0f1;
+        --table-border: #bdc3c7;
+        --hover-color: #3498db;
+    }
+
+    body {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        background-color: var(--background-color);
+        color: var(--primary-color);
+        margin: 0;
+        padding: 2rem;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .container {
+        width: 95%;
+        max-width: 800px;
+        margin: 1rem auto;
+        text-align: center;
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    h1 {
+        color: var(--primary-color);
+        margin: 1rem 0;
+        font-size: 1.5rem;
+    }
+
+    .table-container {
+        margin: 0.5rem auto;
+    }
+
+    table {
+        border-collapse: collapse;
+        margin: 0.5rem auto;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        width: 10%;
+        font-size: 0.8rem;
+    }
+
+    th, td {
+        padding: 0.35rem;
+        border: 1px solid var(--table-border);
+        min-width: 2rem;
+        transition: all 0.2s ease;
+    }
+
+    th {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: bold;
+        font-size: 0.8rem;
+    }
+
+    td {
+        color: var(--primary-color);
+        font-size: 0.8rem;
+    }
+
+    /* Remove transform scale on hover to prevent layout shifts */
+    td:hover {
+        background-color: var(--hover-color);
+        color: white;
+        transform: none;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding: 0.5rem;
+        }
+
+        .container {
+            width: 98%;
+            margin: 0.5rem auto;
+        }
+
+        th, td {
+            padding: 0.25rem;
+            min-width: 1.5rem;
+            font-size: 0.75rem;
+        }
+    }
+</style>
+<body>
+    <div class="container">
+    <div class="input-group">
+        <label for="number">Pick a number: </label>
+        <select name="number" id="number">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+    </div>
+    <h1>Multiplication Table <span id="number_value">1</span></h1>
+    <div class="table-container">
+        <table id="multiplication-table">
+
+        </table>
+    </div>
+</body>
+<script>
+let value = document.getElementById("number").value;
+const table = document.getElementById("multiplication-table");
+
+function createTable(num){
+    let html = `<tr><th></th>`;
+    for (let i = 0; i <= num; i++){
+        html += "<th scope='col'>" + i + "</th>";
+    }
+    html += "</tr>";
+
+    for (let i = 0; i <= num; i++){
+        html += `<tr><th scope='row'>${i}</th>`;
+        for (let j = 0; j <= num; j++){
+            html += "<td>" + (i * j) + "</td>";
+        }
+        html += "</tr>";
+    }
+
+    table.innerHTML = html;
+}
+
+document.getElementById("number").addEventListener("change", function(){
+    value = document.getElementById("number").value;
+    document.getElementById("number_value").textContent = value;
+    createTable(value);
+});
+
+// initial render
+createTable(value);
+</script>
+</html>
