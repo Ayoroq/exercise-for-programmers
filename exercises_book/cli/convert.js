@@ -8,12 +8,14 @@ let invalidBase = false, invalidCurrency = false, invalidAmount = false;
 
 do {
     base = prompt("What is the ISO for the currency you have? ").toUpperCase();
-    amount = Number(prompt("How much do you have? "));
-    currency = prompt("What is the ISO for the currency you want to convert to? ").toUpperCase();
+    const amountInput = prompt("How much do you have? ").trim();
+    amount = Number(amountInput);
+    const currencyInput = prompt("What is the ISO for the currency you want to convert to? ").trim();
+    currency = currencyInput.toUpperCase();
 
-    invalidBase = !countryCodes.includes(base);
-    invalidCurrency = !countryCodes.includes(currency);
-    invalidAmount = isNaN(amount) || amount <= 0;
+    invalidBase = !base || !countryCodes.includes(base);
+    invalidCurrency = !currency || !countryCodes.includes(currency);
+    invalidAmount = !amountInput || isNaN(amount) || amount <= 0;
 
     if (invalidBase) console.log("Invalid base currency code.");
     if (invalidCurrency) console.log("Invalid target currency code.");
