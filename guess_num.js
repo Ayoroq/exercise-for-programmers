@@ -94,14 +94,14 @@ function main() {
                 let adjustedGuessedNumber = guessedNumber.slice(0, -1)
                 
                 // Handle different guess scenarios
-                if (guess < randomNumber) {
+                if (Number(guess) < randomNumber) {
                     if (adjustedGuessedNumber.includes(guess)) {
                         console.log("You already guessed that number. Try again.");
                         guess = prompt("What's your guess? ");
                     } else {
                         guess = prompt("Too low. Guess again: ");
                     }
-                } else if (guess > randomNumber) {
+                } else if (Number(guess) > randomNumber) {
                     if (adjustedGuessedNumber.includes(guess)) {
                         console.log("You already guessed that number. Try again.");
                         guess = prompt("What's your guess? ");
