@@ -1,0 +1,71 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Number Game</title>
+    <link rel="stylesheet" href="styles/guess_num.css">
+</head>
+
+<body>
+    <h1>Guess the Number Game</h1>
+    <div id="difficultyHeader" class="difficulty-header">
+        <p>Choose a difficulty level</p>
+        <form id="guessForm" autocomplete="on">
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty" name="difficulty" required>
+                <option value="" disabled selected>Select difficulty</option>
+                <option value="10">Easy (1-10)</option>
+                <option value="50">Medium (1-50)</option>
+                <option value="100">Hard (1-100)</option>
+            </select>
+        </form>
+    </div>
+    <div class="instructions" id="instructions">
+        <h2>Instructions</h2>
+        <p>
+            <strong>Welcome to the Guess the Number Game!</strong><br><br>
+            Your goal is to correctly guess the number randomly selected by the computer based on your chosen
+            difficulty
+            level.
+            You will have a limited number of guesses, and after each attempt, you'll receive feedback telling
+            you
+            whether your guess was too high, too low, or correct.
+            <br><br>
+        <div class=difficulty-levels>
+            <strong>Difficulty Levels</strong><br>
+            <strong id="easy">Easy</strong>: Guess a number between 1 and 10 (3 guesses)<br>
+            <strong id="medium">Medium</strong>: Guess a number between 1 and 50 (5 guesses)<br>
+            <strong id="hard">Hard</strong>: Guess a number between 1 and 100 (7 guesses)
+        </div>
+        <br><br>
+        <em>Note: The game will begin automatically once you select a difficulty level.</em>
+        </p>
+    </div>
+    <div class="table-container">
+        <table id="gameTable" style="display:none; margin-top: 20px;">
+
+
+        </table>
+    </div>
+    <div class="popup" id="popup" style="display: none">
+        <div id="gameover" style="display: none">
+            <h2>Game Over</h2>
+            <p id="gameoverMessage">You have run out of guesses.</p>
+        </div>
+        <div id="win" style="display: none">
+            <h2>Congratulations!</h2>
+        </div>
+        <div id="result" style="margin-top: 20px;"></div>
+        <p>Would you like you play again?</p>
+        <div class="button-row">
+            <button id="yes" class="button">Yes</button>
+            <button id="no" class="button">No</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+    <script src="script/guess_num.js"></script>
+</body>
+
+</html>

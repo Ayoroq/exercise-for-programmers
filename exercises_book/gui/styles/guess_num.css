@@ -1,0 +1,206 @@
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    margin: 0;
+    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    color: #2c3e50;
+    margin: 1rem 0;
+    font-size: 1.5rem;
+}
+
+table {
+    table-layout: auto;
+    border-collapse: collapse;
+    margin: 0.5rem auto;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    width: 10%;
+    font-size: 0.8rem;
+
+}
+
+td {
+    padding: 0.35rem;
+}
+
+th,
+td {
+    border: 1px solid var(--table-border);
+    min-width: 2rem;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+th {
+    color: white;
+    font-weight: bold;
+}
+
+td:hover {
+    background-color: var(--hover-color);
+    font-size: x-large;
+    transform: none;
+}
+
+
+@keyframes wrong {
+    from {
+        background-color: #e74c3c;
+    }
+
+    to {
+        background-color: white;
+    }
+}
+
+@keyframes almost-correct {
+    from {
+        background-color: #f1c40f;
+    }
+
+    to {
+        background-color: white;
+    }
+
+}
+
+@keyframes closer-to-correct {
+    from {
+        background-color: #dbef44;
+    }
+
+    to {
+        background-color: white;
+    }
+}
+
+.almost-correct {
+    visibility: hidden;
+    /* This class is used to indicate a guess that is almost correct */
+    /* It is used to highlight the guess that is close to the correct answer */
+    background: #f1c40f;
+    opacity: 0.5;
+    font-weight: bold;
+    animation: almost-correct 0.5s ease-in-out;
+}
+
+.closer-to-correct {
+    visibility: hidden;
+    /* This class is used to indicate a guess that is closer to the correct answer */
+    background: #dbef44;
+    opacity: 0.5;
+    font-weight: bold;
+    animation: closer-to-correct 0.5s ease-in-out;
+}
+
+
+td.correct {
+    visibility: visible;
+    background: #03fc6b;
+    font-weight: bold;
+}
+
+td.correct:hover {
+    background: #03fc6b;
+    font-weight: bold;
+}
+
+.wrong {
+    visibility: hidden;
+    opacity: 0.5;
+    background: #e74c3c;
+    animation: wrong 0.5s ease-in-out;
+}
+
+caption {
+    font-weight: lighter;
+    margin-bottom: 0.5rem;
+}
+
+.button {
+    background-color: #0b3a5878;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0.8rem;
+    color: white;
+    font-size: 1rem;
+
+}
+.button:hover {
+    background-color: #11161a;
+}
+
+p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    text-align: center;
+
+}
+
+.popup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    background-color: #16c842;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 1rem;
+    width: 300px;
+}
+
+.popup p {
+    margin-bottom: 0.5rem;
+}
+
+.popup button {
+    margin: 0 0.5rem;
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+}
+
+
+.instructions {
+    font-size: 0.9rem;
+    color: #34495e;
+    margin: 1rem 0;
+    text-align: center;
+}
+.difficulty-levels {
+    font-size: 0.9rem;
+    color: #34495e;
+    margin: 1rem 0;
+    text-align: center;
+    white-space: nowrap;
+    padding: 4px 8px;
+}
+.difficulty-levels strong{
+    margin-bottom: 4px;
+    display: inline-block;
+    font-weight: bold;
+}
+#easy{
+    color: #2ecc71;
+}
+#medium{
+    color: #f1c40f;
+}
+#hard{
+    color: #e74c3c;
+}
