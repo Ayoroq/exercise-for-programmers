@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess the Number Game</title>
+    <!-- Link to external CSS file -->
     <link rel="stylesheet" href="styles/guess_num.css">
 </head>
 
 <body>
+    <!-- Game title -->
     <h1>Guess the Number Game</h1>
+
+    <!-- Difficulty selection section -->
     <div id="difficultyHeader" class="difficulty-header">
         <p>Choose a difficulty level</p>
         <form id="guessForm" autocomplete="on">
@@ -21,42 +25,49 @@
             </select>
         </form>
     </div>
+
+    <!-- Instructions for the player -->
     <div class="instructions" id="instructions">
         <h2>Instructions</h2>
         <p>
             <strong>Welcome to the Guess the Number Game!</strong><br><br>
             Your goal is to correctly guess the number randomly selected by the computer based on your chosen
-            difficulty
-            level.
-            You will have a limited number of guesses, and after each attempt, you'll receive feedback telling
-            you
+            difficulty level.
+            You will have a limited number of guesses, and after each attempt, you'll receive feedback telling you
             whether your guess was too high, too low, or correct.
             <br><br>
-        <div class=difficulty-levels>
-            <strong>Difficulty Levels</strong><br>
-            <strong id="easy">Easy</strong>: Guess a number between 1 and 10 (3 guesses)<br>
-            <strong id="medium">Medium</strong>: Guess a number between 1 and 50 (5 guesses)<br>
-            <strong id="hard">Hard</strong>: Guess a number between 1 and 100 (7 guesses)
-        </div>
-        <br><br>
-        <em>Note: The game will begin automatically once you select a difficulty level.</em>
+            <!-- Difficulty level details -->
+            <div class="difficulty-levels">
+                <strong>Difficulty Levels</strong><br>
+                <strong id="easy">Easy</strong>: Guess a number between 1 and 10 (3 guesses)<br>
+                <strong id="medium">Medium</strong>: Guess a number between 1 and 50 (5 guesses)<br>
+                <strong id="hard">Hard</strong>: Guess a number between 1 and 100 (7 guesses)
+            </div>
+            <br><br>
+            <em>Note: The game will begin automatically once you select a difficulty level.</em>
         </p>
     </div>
+
+    <!-- Table for clickable numbers (hidden until game starts) -->
     <div class="table-container">
         <table id="gameTable" style="display:none; margin-top: 20px;">
-
-
         </table>
     </div>
+
+    <!-- Popup for game over or win -->
     <div class="popup" id="popup" style="display: none">
+        <!-- Game over message -->
         <div id="gameover" style="display: none">
             <h2>Game Over</h2>
             <p id="gameoverMessage">You have run out of guesses.</p>
         </div>
+        <!-- Win message -->
         <div id="win" style="display: none">
             <h2>Congratulations!</h2>
         </div>
+        <!-- Result message -->
         <div id="result" style="margin-top: 20px;"></div>
+        <!-- Play again buttons -->
         <p>Would you like you play again?</p>
         <div class="button-row">
             <button id="yes" class="button">Yes</button>
@@ -64,7 +75,9 @@
         </div>
     </div>
 
+    <!-- JS Confetti library for celebration effect -->
     <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+    <!-- Main game script -->
     <script src="script/guess_num.js"></script>
 </body>
 

@@ -1,3 +1,4 @@
+/* Set up body styles and layout */
 body {
     font-family: 'Segoe UI', system-ui, sans-serif;
     background-color: #ecf0f1;
@@ -10,12 +11,14 @@ body {
     align-items: center;
 }
 
+/* Style for the main game title */
 h1 {
     color: #2c3e50;
     margin: 1rem 0;
     font-size: 1.5rem;
 }
 
+/* Table styles for the game grid */
 table {
     table-layout: auto;
     border-collapse: collapse;
@@ -24,15 +27,16 @@ table {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     overflow: hidden;
-    width: 10%;
+    width: 10%; /* Table width is small for compact display */
     font-size: 0.8rem;
-
 }
 
+/* Padding for table cells */
 td {
     padding: 0.35rem;
 }
 
+/* Shared styles for table headers and cells */
 th,
 td {
     border: 1px solid var(--table-border);
@@ -41,92 +45,95 @@ td {
     text-align: center;
 }
 
+/* Header cell styles */
 th {
     color: white;
     font-weight: bold;
 }
 
+/* Highlight cell on hover */
 td:hover {
     background-color: var(--hover-color);
     font-size: x-large;
     transform: none;
 }
 
-
+/* Animation for wrong guess */
 @keyframes wrong {
     from {
         background-color: #e74c3c;
     }
-
     to {
         background-color: white;
     }
 }
 
+/* Animation for almost correct guess */
 @keyframes almost-correct {
     from {
         background-color: #f1c40f;
     }
-
     to {
         background-color: white;
     }
-
 }
 
+/* Animation for closer-to-correct guess */
 @keyframes closer-to-correct {
     from {
         background-color: #dbef44;
     }
-
     to {
         background-color: white;
     }
 }
 
+/* Style for almost correct guess */
 .almost-correct {
-    visibility: hidden;
-    /* This class is used to indicate a guess that is almost correct */
-    /* It is used to highlight the guess that is close to the correct answer */
+    visibility: hidden; /* Hide cell after guess */
     background: #f1c40f;
     opacity: 0.5;
     font-weight: bold;
     animation: almost-correct 0.5s ease-in-out;
 }
 
+/* Style for closer-to-correct guess */
 .closer-to-correct {
-    visibility: hidden;
-    /* This class is used to indicate a guess that is closer to the correct answer */
+    visibility: hidden; /* Hide cell after guess */
     background: #dbef44;
     opacity: 0.5;
     font-weight: bold;
     animation: closer-to-correct 0.5s ease-in-out;
 }
 
-
+/* Style for correct guess */
 td.correct {
     visibility: visible;
     background: #03fc6b;
     font-weight: bold;
 }
 
+/* Keep correct cell highlighted on hover */
 td.correct:hover {
     background: #03fc6b;
     font-weight: bold;
 }
 
+/* Style for wrong guess */
 .wrong {
-    visibility: hidden;
+    visibility: hidden; /* Hide cell after guess */
     opacity: 0.5;
     background: #e74c3c;
     animation: wrong 0.5s ease-in-out;
 }
 
+/* Style for table caption */
 caption {
     font-weight: lighter;
     margin-bottom: 0.5rem;
 }
 
+/* Button styles */
 .button {
     background-color: #0b3a5878;
     border: none;
@@ -136,19 +143,19 @@ caption {
     margin: 0.8rem;
     color: white;
     font-size: 1rem;
-
 }
 .button:hover {
     background-color: #11161a;
 }
 
+/* Paragraph styles */
 p {
     margin: 0.5rem 0;
     font-size: 1rem;
     text-align: center;
-
 }
 
+/* Popup styles for win/game over */
 .popup {
     display: flex;
     flex-direction: column;
@@ -170,12 +177,13 @@ p {
     margin: 0 0.5rem;
 }
 
+/* Row of buttons in popup */
 .button-row {
     display: flex;
     justify-content: center;
 }
 
-
+/* Instructions and difficulty level styles */
 .instructions {
     font-size: 0.9rem;
     color: #34495e;
