@@ -1,0 +1,156 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    #ball {
+      width: 120px;
+      height: 120px;
+      display: flex;
+      flex-wrap: wrap;
+      background: radial-gradient(circle at 30% 30%, #4c4c4c, #000);
+      border-radius: 50%;
+      overflow: hidden;
+      animation-duration: 4s;
+      position: relative;
+      justify-content: center;
+      align-items: center;
+      box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.2),
+        5px 5px 15px rgba(0, 0, 0, 0.6);
+    }
+
+    button {
+      background-color: rgb(255, 255, 255);
+      color: rgb(0, 0, 0);
+      width: 25%;
+      height: 25%;
+      border-radius: 50%;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ddd;
+      cursor: pointer;
+    }
+
+    .highlight {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 30px;
+      height: 30px;
+      background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.4),
+        transparent
+      );
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    @keyframes shake {
+      0%,
+      100% {
+        transform: translate(0, 0);
+      }
+
+      10%,
+      30%,
+      50%,
+      70%,
+      90% {
+        transform: translate(-5px, -5px);
+      }
+
+      20%,
+      40%,
+      60%,
+      80% {
+        transform: translate(5px, 5px);
+      }
+    }
+
+    .shake-effect {
+      animation: shake 0.5s ease-in-out;
+      /* Adjust duration and easing as needed */
+    }
+  </style>
+
+  <body>
+    <div id="question">
+      <label for="question-input"> Type your Question here: </label>
+      <input
+        type="text"
+        id="question-input"
+        placeholder="Ask your question..."
+      />
+    </div>
+    <br />
+    <br />
+    <div id="ball">
+      <div class="highlight"></div>
+      <button>8</button>
+    </div>
+    <br />
+    <br />
+    <div id="result"></div>
+  </body>
+  <script>
+    // This file has limited design and it's only functional. 
+    // Get the ball element
+    const element = document.getElementById("ball");
+
+    // Function to start the shake animation
+    function startShake() {
+      element.classList.add("shake-effect");
+    }
+
+    // Remove shake effect after animation ends
+    element.addEventListener("animationend", () => {
+      element.classList.remove("shake-effect");
+    });
+
+    // Possible Magic 8 Ball responses
+    const ball = ["Yes", "No", "Maybe", "Ask again later"];
+
+    // Function to pick a random response
+    function randomBall() {
+      let random = Math.floor(Math.random() * ball.length);
+      return ball[random];
+    }
+
+    // When the 8-ball button is clicked
+    document.querySelector("#ball button").addEventListener("click", () => {
+      // Clear previous result
+      document.getElementById("result").innerHTML = "";
+      // Get the user's question
+      const userQuestion = document
+        .getElementById("question-input")
+        .value.trim();
+      // If no question is entered, show a message and stop
+      if (!userQuestion) {
+        document.getElementById("result").innerHTML = "Please ask a question!";
+        return;
+      }
+      // Start the shake animation
+      startShake();
+      // Disable the button while shaking
+      const button = document.querySelector("#ball button");
+      button.disabled = true;
+    });
+
+    // After the shake animation ends, show the answer and re-enable the button
+    element.addEventListener("animationend", () => {
+      element.classList.remove("shake-effect");
+      const result = randomBall();
+      document.getElementById("result").innerHTML = result;
+      document.querySelector("#ball button").disabled = false;
+      console.log(result); // Log the result to the console
+    });
+
+    // Example: You could call startShake() elsewhere if needed
+    // document.getElementById('myButton').addEventListener('click', startShake);
+  </script>
+</html>
