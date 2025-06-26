@@ -148,22 +148,10 @@ function restructure(data) {
 
 // Function to print the employee data in a formatted table
 function print(data) {
-  console.log(
-    "Name".padEnd(20, " ") +
-      " | " +
-      "Position".padEnd(25, " ") +
-      " | " +
-      "Separation Date".padEnd(20, " ")
-  );
+  console.log("Name".padEnd(20, " ") + " | " + "Position".padEnd(25, " ") + " | " + "Separation Date".padEnd(20, " "));
   console.log("-".repeat(20) + " | " + "-".repeat(25) + " | " + "-".repeat(20));
   for (let [key, value] of data) {
-    console.log(
-      value["Name"].padEnd(20, " ") +
-        " | " +
-        value.Position.padEnd(25, " ") +
-        " | " +
-        value["Separation date"].padEnd(20, " ")
-    );
+    console.log(value["Name"].padEnd(20, " ") + " | " + value.Position.padEnd(25, " ") + " | " + value["Separation date"].padEnd(20, " "));
   }
 }
 
@@ -171,7 +159,7 @@ function print(data) {
 // Only allows "last name", "position", or "separation date"
 function verifySortValue(value) {
   value = value.trim();
-  return value === "Last Name" || value === "Position" || value === "Separation date"
+  return value === "Last Name" || value === "Position" || value === "Separation date";
 }
 
 // function to fetch the employees from the database
@@ -185,8 +173,7 @@ async function fetchEmployees() {
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
     });
-    let sql =
-      "SELECT `First Name`, `Last Name`, Position, DATE_FORMAT(`Separation Date`, '%Y-%m-%d') AS `Separation date` FROM employees;";
+    let sql = "SELECT `First Name`, `Last Name`, Position, DATE_FORMAT(`Separation Date`, '%Y-%m-%d') AS `Separation date` FROM employees;";
 
     const [rows] = await con.execute(sql);
 
