@@ -1,0 +1,34 @@
+{
+  "products": [
+    {
+      "name": "Widget",
+      "price": 25,
+      "quantity": 5
+    },
+    {
+      "name": "Thing",
+      "price": 15.5,
+      "quantity": 5
+    },
+    {
+      "name": "Doodad",
+      "price": 5,
+      "quantity": 10
+    },
+    {
+      "name": "Bottle",
+      "price": 50,
+      "quantity": 25
+    },
+    {
+      "name": "Telli",
+      "price": 500,
+      "quantity": 5
+    },
+    {
+      "name": "Teu",
+      "price": 15,
+      "quantity": 4
+    }
+  ]
+}
