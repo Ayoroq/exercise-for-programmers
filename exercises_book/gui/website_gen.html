@@ -5,36 +5,117 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Website Generator</title>
   </head>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background-color: rgb(151, 186, 174);
+    }
+    h1 {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+    }
+    .websiteForm {
+      display: block;
+    }
+    .radio-input #javascript,
+    #css {
+      margin: 10px;
+    }
+    .websiteForm .radio-input {
+      display: block;
+      margin-bottom: 50px;
+      font-weight: bold;
+      color: rgb(80, 0, 111);
+    }
+
+    .websiteForm .input-text {
+      display: flex;
+      justify-content: space-evenly;
+      margin: 10px;
+    }
+    .input-text div {
+      font-weight: bold;
+      height: min-content;
+      color: rgb(92, 47, 255);
+      margin: 30px;
+      text-align: left;
+    }
+    .input-text input[type="text"] {
+      height: 30px;
+      width: 200px;
+      border-radius: 10px;
+      background-color: cornsilk;
+      opacity: 50%;
+      margin-top: 5px;
+    }
+    input[type="radio"] {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      accent-color: rgb(241, 234, 17);
+    }
+
+    .button-div button {
+      background-color: hotpink;
+      display: block;
+      margin: auto;
+      font-size: large;
+      height: 50px;
+      width: 200px;
+      border-radius: 10px;
+      opacity: 75%;
+      font-weight: bolder;
+    }
+    .button-div button:hover {
+      background-color: rgb(255, 27, 149);
+    }
+    .result {
+      width: 300px;
+      margin: 100px auto;
+      text-align: center;
+      font-weight: bolder;
+      color:rgb(170, 0, 0);
+      height: 30px;
+      border-radius: 10px;
+      font-family: cursive;
+    }
+  </style>
   <body>
     <h1>Simple Website Generator</h1>
-    <form id="websiteForm">
-      <div id="website-div">
-        <label for="websiteName">Site Name:</label>
-        <input type="text" id="websiteName" name="websiteName" required />
+    <form id="websiteForm" class="websiteForm">
+      <div class="input-text">
+        <div id="website-div" class="website-div">
+          <label for="websiteName">Site Name:</label>
+          <input type="text" id="websiteName" name="websiteName" required />
+        </div>
+        <div id="author">
+          <label for="authorName">Author:</label>
+          <input type="text" id="authorName" name="author" />
+        </div>
       </div>
-      <div id="author">
-        <label for="authorName">Author:</label>
-        <input type="text" id="authorName" name="author" />
+      <div class="radio-input">
+        <div id="javascript">
+          <label>Include JavaScript:</label>
+          <label for="javascript-yes">Yes</label>
+          <input type="radio" id="javascript-yes" name="javascript-button" />
+          <label for="javascript-no">No</label>
+          <input type="radio" id="javascript-no" name="javascript-button" />
+        </div>
+        <div id="css">
+          <label>Include CSS:</label>
+          <label for="css-yes">Yes</label>
+          <input type="radio" value="yes" id="css-yes" name="css-button" />
+          <label for="css-no">No</label>
+          <input type="radio" value="no" id="css-no" name="css-button" />
+        </div>
       </div>
-      <div id="javascript">
-        <label>Include JavaScript:</label>
-        <label for="javascript-yes">Yes</label>
-        <input type="radio" id="javascript-yes" name="javascript-button" />
-        <label for="javascript-no">No</label>
-        <input type="radio" id="javascript-no" name="javascript-button" />
-      </div>
-      <div id="css">
-        <label>Include CSS:</label>
-        <label for="css-yes">Yes</label>
-        <input type="radio" value="yes" id="css-yes" name="css-button" />
-        <label for="css-no">No</label>
-        <input type="radio" value="no" id="css-no" name="css-button" />
-      </div>
-      <div id="button-div" style="display: none">
+      <div class="button-div" id="button-div" style="display: none">
         <button id="button" onclick="generate(event)">Generate Site</button>
       </div>
     </form>
-    <div>
+    <div class="result">
       <div id="result">Please fill all forms to generate the website</div>
     </div>
   </body>

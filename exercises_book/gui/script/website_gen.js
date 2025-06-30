@@ -1,10 +1,11 @@
-const zip = new JSZip();
-let result = document.getElementById("result");
-let js_yes = document.getElementById("javascript-yes");
-let js_no = document.getElementById("javascript-no");
-let css_yes = document.getElementById("css-yes");
-let css_no = document.getElementById("css-no");
+const zip = new JSZip(); // Create a new JSZip instance for zipping files
+let result = document.getElementById("result"); // Result message element
+let js_yes = document.getElementById("javascript-yes"); // JS "yes" radio button
+let js_no = document.getElementById("javascript-no");   // JS "no" radio button
+let css_yes = document.getElementById("css-yes");       // CSS "yes" radio button
+let css_no = document.getElementById("css-no");         // CSS "no" radio button
 
+// Validate user input for site name, author, and radio selections
 function validateInput() {
   const websiteName = document.getElementById("websiteName").value === undefined ? "" : document.getElementById("websiteName").value.trim();
   const author = document.getElementById("authorName").value === undefined ? "" : document.getElementById("authorName").value.trim();
@@ -21,11 +22,13 @@ function validateInput() {
   }
 
   let isButtonSelected = true;
+  // Ensure both JS and CSS radio buttons are selected
   if (((!js_yes.checked && !js_no.checked) || (!css_yes.checked && !css_no.checked)) && isAuthorNameValid && isWebsiteNameValid) {
     result.innerText = "Please make all selections to generate file";
     isButtonSelected = false;
   }
 
+  // Show the generate button if all inputs are valid
   if (isWebsiteNameValid && isAuthorNameValid && isButtonSelected) {
     result.innerText = "";
     document.getElementById("button-div").style.display = "block";
@@ -34,6 +37,7 @@ function validateInput() {
   return { isAuthorNameValid, isWebsiteNameValid };
 }
 
+// Hide the generate button if required fields are empty
 function displayGenerate() {
   let sitename = document.getElementById("websiteName").value;
   let author = document.getElementById("authorName").value;
@@ -42,12 +46,14 @@ function displayGenerate() {
   }
 }
 
+// Generate the website zip file based on user input
 function generate() {
   event.preventDefault();
   let websiteName = document.getElementById("websiteName").value.trim();
   let author = document.getElementById("authorName").value.trim();
   let text = `Created ./${websiteName}`;
-  const indexFilePath = js_no.checked && css_no.checked ? `${websiteName}/index.html` : `index.html`;
+  // Always put index.html inside the site folder
+  const indexFilePath = `${websiteName}/index.html`;
   zip.file(
     indexFilePath,
     `<!DOCTYPE html>
@@ -64,18 +70,21 @@ function generate() {
           </html>`
   );
   text += `\nCreated ./${websiteName}/index.html`;
+  // Create js folder if selected
   if (js_yes.checked) {
-    zip.folder("js");
-    text += `\nCreated .${websiteName}/js/`;
+    zip.folder(`${websiteName}/js`);
+    text += `\nCreated ./${websiteName}/js/`;
   }
+  // Create css folder if selected
   if (css_yes.checked) {
-    zip.folder("css");
-    text += `\nCreated .${websiteName}/css/`;
+    zip.folder(`${websiteName}/css`);
+    text += `\nCreated ./${websiteName}/css/`;
   }
+  // Generate and download the zip file
   zip.generateAsync({ type: "blob" }).then(
     function (blob) {
       result.innerText = text;
-      saveAs(blob, `${websiteName}.zip`); // 2) trigger the download
+      saveAs(blob, `${websiteName}.zip`); // Trigger the download
     },
     function (err) {
       console.log(err);
@@ -83,6 +92,7 @@ function generate() {
   );
 }
 
+// Add event listeners for validation and button display
 document.getElementById("websiteName").addEventListener("focusout", validateInput);
 document.getElementById("authorName").addEventListener("focusout", validateInput);
 document.getElementById("websiteName").addEventListener("input", displayGenerate);
