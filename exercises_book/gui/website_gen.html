@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website Generator</title>
+  </head>
+  <body>
+    <h1>Simple Website Generator</h1>
+    <form id="websiteForm">
+      <div id="website-div">
+        <label for="websiteName">Site Name:</label>
+        <input type="text" id="websiteName" name="websiteName" required />
+      </div>
+      <div id="author">
+        <label for="authorName">Author:</label>
+        <input type="text" id="authorName" name="author" />
+      </div>
+      <div id="javascript">
+        <label>Include JavaScript:</label>
+        <label for="javascript-yes">Yes</label>
+        <input type="radio" id="javascript-yes" name="javascript-button" />
+        <label for="javascript-no">No</label>
+        <input type="radio" id="javascript-no" name="javascript-button" />
+      </div>
+      <div id="css">
+        <label>Include CSS:</label>
+        <label for="css-yes">Yes</label>
+        <input type="radio" value="yes" id="css-yes" name="css-button" />
+        <label for="css-no">No</label>
+        <input type="radio" value="no" id="css-no" name="css-button" />
+      </div>
+      <div id="button-div" style="display: none">
+        <button id="button" onclick="generate(event)">Generate Site</button>
+      </div>
+    </form>
+    <div>
+      <div id="result">Please fill all forms to generate the website</div>
+    </div>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="/exercises_book/gui/script/website_gen.js"></script>
+</html>
