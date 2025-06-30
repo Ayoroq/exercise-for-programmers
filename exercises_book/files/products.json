@@ -29,6 +29,21 @@
       "name": "Teu",
       "price": 15,
       "quantity": 4
+    },
+    {
+      "name": "Red tape",
+      "price": 10,
+      "quantity": 90
+    },
+    {
+      "name": "Buns",
+      "price": 10,
+      "quantity": 26
+    },
+    {
+      "name": "Salt",
+      "price": 60,
+      "quantity": 5
     }
   ]
 }

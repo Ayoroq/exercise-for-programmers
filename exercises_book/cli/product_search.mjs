@@ -95,8 +95,8 @@ async function askQuestion(question, data) {
         if (add) {
           await addProduct(data, filepath, answer); // Add new product
           // Refresh in-memory data after adding
-          const newData = await getData(filepath);
-          return productSearch(newData, answer);
+          //const newData = await getData(filepath);
+          //return productSearch(newData, answer);
         } else{
           // Offer to search again or exit
           const searchAgain = verifyAns("Would you like to search again? (y/n) ");
@@ -132,7 +132,7 @@ async function displayProduct(question, data) {
 async function main() {
   try {
     const data = await getData(filepath); // Load product data from file
-    await displayProduct("What is the product name? ", data); // Start interaction
+    await displayProduct("What is the product name you would like to search for? ", data); // Start interaction
   } catch (error) {
     console.log(error.message);
   }
