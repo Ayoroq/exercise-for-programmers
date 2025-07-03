@@ -1,0 +1,5 @@
+badger badger badger badger mushroom mushroom snake badger badger badger Badger
+
+Create a program that reads in a file and counts the frequency of words in the file. Then construct a histogram displaying
+the words and the frequency, and display the histogram to screen
+the screen.
