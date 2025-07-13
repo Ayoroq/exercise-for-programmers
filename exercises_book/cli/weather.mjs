@@ -1,5 +1,6 @@
 import Prompt from "prompt-sync";
 const prompt = Prompt({ sigint: true });
+import { select } from "@inquirer/prompts";
 
 import countryList from "iso-3166-country-list";
 
@@ -9,44 +10,12 @@ dotenv.config({ path: "../../.env" });
 
 const apiKey = process.env.WEATHER_API_KEY;
 
-const windDirectionMap = new Map([
-  [10, "North wind"],
-  [20, "North-northeast wind"],
-  [30, "North-northeast wind"],
-  [40, "Northeast wind"],
-  [50, "Northeast wind"],
-  [60, "East-northeast wind"],
-  [70, "East-northeast wind"],
-  [80, "East wind"],
-  [90, "East wind"],
-  [100, "East wind"],
-  [110, "East-southeast wind"],
-  [120, "East-southeast wind"],
-  [130, "Southeast wind"],
-  [140, "Southeast wind"],
-  [150, "South-southeast wind"],
-  [160, "South-southeast wind"],
-  [170, "South wind"],
-  [180, "South wind"],
-  [190, "South wind"],
-  [200, "South-southwest wind"],
-  [210, "South-southwest wind"],
-  [220, "Southwest wind"],
-  [230, "Southwest wind"],
-  [240, "West-southwest wind"],
-  [250, "West-southwest wind"],
-  [260, "West wind"],
-  [270, "West wind"],
-  [280, "West wind"],
-  [290, "West-northwest wind"],
-  [300, "West-northwest wind"],
-  [310, "Northwest wind"],
-  [320, "Northwest wind"],
-  [330, "North-northwest wind"],
-  [340, "North-northwest wind"],
-  [350, "North wind"],
-  [360, "North wind"],
-]);
+const windDirections = [
+  "North", "North-northeast", "Northeast", "East-northeast",
+  "East", "East-southeast", "Southeast", "South-southeast",
+  "South", "South-southwest", "Southwest", "West-southwest",
+  "West", "West-northwest", "Northwest", "North-northwest"
+];
 
 // function to get the LAT and LONG for cities
 async function getLatLong(city, countryCode) {
@@ -56,8 +25,49 @@ async function getLatLong(city, countryCode) {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const lat = data[0].lat;
-    const lon = data[0].lon;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//function to select a choice if multiple options
+async function selectCity(cityArrayData) {
+  try {
+    let choice = [];
+    cityArrayData.forEach((cityArray) => {
+      choice.push({
+        name: `${cityArray[0]}, ${cityArray[1]}, ${cityArray[2]}`,
+        value: cityArray,
+      });
+    });
+    const answer = await select({
+      message: "Multiple cities were found. Please select the desired city:",
+      choices: choice,
+    });
+    return answer;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+//function to confirm the number of data points
+async function validateDataResult(data) {
+  try {
+    if (data.length === 1) {
+      const lat = data[0].lat;
+      const lon = data[0].lon;
+      return { lat, lon };
+    }
+    let dataResults = [];
+    if (data.length > 1) {
+      for (let i = 0; i < data.length; i++) {
+        dataResults.push([data[i].name, data[i].state, data[i].country, data[i].lat, data[i].lon]);
+      }
+    }
+    const answer = await selectCity(dataResults);
+    const lat = answer[3];
+    const lon = answer[4];
     return { lat, lon };
   } catch (error) {
     console.log(error);
@@ -67,7 +77,11 @@ async function getLatLong(city, countryCode) {
 // function to get the current weather information for a city
 async function getCurrentWeather(city, countryCode) {
   try {
-    const { lat, lon } = await getLatLong(city, countryCode);
+    const geoData = await getLatLong(city, countryCode);
+    if (!geoData || geoData.length === 0) {
+      throw new Error("No data found for the given city. Please try again.");
+    }
+    const { lat, lon } = await validateDataResult(geoData);
     const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -87,14 +101,14 @@ function convertToFahrenheit(temp) {
 // convert to sunrise and sunset times
 function getSunriseSunsetTime(unixTime) {
   const date = new Date(unixTime * 1000);
-  const time = date.toLocaleTimeString({hour12: false });
+  const time = date.toLocaleTimeString({ hour12: false });
   //const time = date.toUTCString() //This can be changed to return utc time. For the purpose of this exercise, sticking to local time
   return time;
 }
 // get wind direction
 function getWindDirection(degree) {
-  const roundedDegree = Math.round(degree / 10) * 10;
-  return windDirectionMap.get(roundedDegree);
+  const index = Math.round((degree % 360) / 22.5) % 16;
+  return `${windDirections[index]} wind`;
 }
 
 // function to get weather message
@@ -149,7 +163,7 @@ function processData(data) {
     information["Wind Speed"] = data.wind.speed + " m/s";
     information["Wind Direction"] = getWindDirection(data.wind.deg);
     const cityName = data.name;
-    const countryName = countryList.name(data.sys.country) === undefined ? "Unknown" : data.sys.country;
+    const countryName = countryList.name(data.sys.country) || data.sys.country;
 
     let longestKey = 0;
     let longestValue = 0;
@@ -162,7 +176,7 @@ function processData(data) {
       }
     }
     const weatherMessage = getWeatherMessage(data.main.temp, data.weather[0].description);
-    return { information, longestKey, longestValue, weatherMessage, cityName, countryName};
+    return { information, longestKey, longestValue, weatherMessage, cityName, countryName };
   } catch (error) {
     console.log(error);
   }
@@ -187,40 +201,49 @@ function printWeatherInfo(data) {
 // function to get the city and country code from the user
 function getUserLocation() {
   try {
-    console.log("\nPlease enter the city and country code (e.g. Toronto, Canada): \n");
+    console.log("\nPlease enter the city and country code (e.g. Toronto, CA): \n");
     const location = prompt("Where are you? ");
-    const [city, countryName] = location.split(",").map((str) => str.trim());
-    return { city, countryName };
+    const userInputs = location.split(",").map((str) => str.trim());
+    if (userInputs.length !== 2) {
+      console.log("\nInvalid input. Please try again.");
+      return getUserLocation();
+    }
+    const city = userInputs[0];
+    const countryCode = userInputs[1];
+    return { city, countryCode };
   } catch (e) {
     console.log(e);
   }
 }
 
 // function to process user's data to confirm the country code is valid
-function validateUserInput() {
-  try {
-    let { city, countryName } = getUserLocation();
-    countryName = countryName.trim().toLowerCase().charAt(0).toUpperCase() + countryName.trim().toLowerCase().slice(1);
-    const isCountryValid = countryList.names.includes(countryName);
-    if (!isCountryValid) {
-      console.log("Invalid country name. Please try again.");
-      return validateUserInput();
+function validateUserInput() {  
+  while (true) {
+    try {
+      let { city, countryCode } = getUserLocation();
+      const isCountryValid = countryList.codes.includes(countryCode.toUpperCase());
+      if (isCountryValid) {
+        return { city, countryCode };
+      }
+      console.log("\nInvalid country code. Please try again.");
+    } catch (error) {
+      console.log(error);
     }
-    const countryCode = countryList.code(countryName);
-    return { city, countryCode };
-  } catch (error) {
-    console.log(error);
   }
 }
 
 // main function
 async function main() {
-  const { city, countryCode } = validateUserInput();
-  const data = await getCurrentWeather(city, countryCode);
-  printWeatherInfo(data);
+  try {
+    const { city, countryCode } = validateUserInput();
+    const data = await getCurrentWeather(city, countryCode);
+    if (data) {
+      printWeatherInfo(data);
+    }
+  } catch (error) {
+    console.error("An unexpected error occurred:", error);
+  }
 }
 
 // start the program
 main();
-
-//console.log(countryList.names.includes("Togo"))
