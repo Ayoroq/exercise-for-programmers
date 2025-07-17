@@ -1,0 +1,25 @@
+ul {
+  display: flex;
+  flex-wrap: wrap;
+    gap: 1px;
+}
+
+li {
+  display: flex;
+  flex-direction: column;
+  height: 40vh;
+  flex-grow: 1;
+  gap: 10px;
+}
+
+img {
+  max-height: 80%;
+  min-width: 100%;
+  object-fit: cover;
+  vertical-align: bottom;
+}
+
+p {
+  text-wrap: wrap;
+  overflow: hidden;
+}
