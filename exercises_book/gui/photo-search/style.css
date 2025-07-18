@@ -52,6 +52,16 @@ header .container {
 
 .btn:hover {
   background-color: #193a20;
+  /* Pull the button upwards when hovered */
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  /* Push the button downwards when pressed */
+  transform: translateY(0);
+}
+.button-container {
+  padding-top: 5px;
 }
 
 .main {
