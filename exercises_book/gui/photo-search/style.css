@@ -1,6 +1,6 @@
 body {
   font-family: system-ui, sans-serif;
-  background-color: #fc7703;
+  background-color: #e3700c;
   margin: 0;
   padding: 50px;
 }
@@ -31,8 +31,14 @@ header .container {
 .search {
   min-width: 50%;
   padding: 10px;
+  padding-left: 20px;
   border: 1px solid #ccc;
   border-radius: 20px;
+}
+
+.search:focus {
+  outline: none;
+  border-color: blue;
 }
 
 .btn {
