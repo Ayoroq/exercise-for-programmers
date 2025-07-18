@@ -2,6 +2,9 @@
 
 A dynamic web application that combines visual content from Unsplash with related text content from Reddit to create an engaging photo browsing experience.
 
+![Photo Search Application Screenshot](photo_search.png)
+*Screenshot of the Photo Search application showing search results for "Movies"*
+
 ## Overview
 
 This application allows users to search for photos using keywords, fetches relevant images from the Unsplash API, retrieves related text content from Reddit, and displays the results in a responsive gallery layout.
