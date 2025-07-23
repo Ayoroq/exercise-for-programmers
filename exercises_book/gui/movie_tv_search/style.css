@@ -1,0 +1,44 @@
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 5fr 0.5fr;
+}
+
+.header-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form {
+  flex: 0.75;
+  display: flex;
+  align-items: center;
+  gap: 7rem;
+}
+
+.search-container {
+  min-width: 50%;
+}
+
+input {
+  padding-left: 0.5rem;
+  width: 100%;
+  border-radius: 0.25rem;
+  border: 1px solid #000000;
+}
+
+.main {
+  background-color: lightblue;
+}
+
+.footer {
+  background-color: green;
+}
