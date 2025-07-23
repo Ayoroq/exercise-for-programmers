@@ -37,6 +37,33 @@ input {
 
 .main {
   background-color: lightblue;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  grid-template-rows: 4fr 1fr;
+  gap: 1rem;
+}
+
+.main-container {
+  grid-column: 1 / span 1;
+}
+
+.media-container{
+    grid-column: 2/ span 1;
+}
+.cast-container {
+  grid-column: 1 / span 1;
+  grid-row: 2 / span 1;
+}
+
+.ratings-container{
+  grid-column: 2 / span 1;
+  grid-row: 2 / span 1;
+}
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0.5rem;
 }
 
 .footer {
