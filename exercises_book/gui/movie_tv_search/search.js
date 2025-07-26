@@ -78,7 +78,6 @@ function processCastData(cast) {
 async function getMediaDetails(query) {
   try {
     const data = await searchMedia(query);
-    console.log(data);
     const processedData = processSearchResults(data);
     if (processedData && processedData.length > 0) {
       for (const item of processedData) {
@@ -92,7 +91,6 @@ async function getMediaDetails(query) {
       console.log("No results found for the query:", query);
       return null;
     }
-    console.log(processedData);
     return processedData;
   } catch (error) {
     console.error("Error fetching media details:", error);
@@ -100,10 +98,9 @@ async function getMediaDetails(query) {
 }
 
 // function to update HTML  main page with the selected media details
-function updateMediaDetails(mediaInfo) {
+function updateMediaDetails(mediaInfo, media_id) {
   // first find the item with the the selected id
-  const id = event.target.value;
-  const selectedItem = mediaInfo.find((item) => item.id === parseInt(id));
+  const selectedItem = mediaInfo.find((item) => item.id === parseInt(media_id));
   if (!selectedItem) {
     return;
   }
@@ -125,6 +122,7 @@ function updateMediaDetails(mediaInfo) {
 
   // add the cast information
   const castList = document.querySelector(".cast-list");
+  castList.innerHTML = "";
   for (const actor of selectedItem.cast) {
     const actorItem = document.createElement("li");
     actorItem.classList.add("cast-item");
@@ -148,11 +146,14 @@ function updateMediaDetails(mediaInfo) {
 }
 
 // function to handle the display of search results when user types in the search bar
+// The results is to capture the mediaDetails once and not having to call the api again
+let results;
+
 async function displaySearchResults(query) {
   const searchResultsList = document.querySelector(".search-results-list");
   searchResultsList.innerHTML = ""; // Clear previous results
   if (query) {
-    const results = await getMediaDetails(query);
+    results = await getMediaDetails(query);
     if (!results) {
       return;
     }
@@ -186,14 +187,22 @@ document.querySelector(".search").addEventListener("input", (event) => {
   const searchResult = document.querySelector(".search-results");
   searchResult.classList.add("is-visible");
   const query = event.target.value;
-  console.log(query);
   displaySearchResults(query);
 });
 
 // // Event listener for when a search result is selected
-// document.querySelector(".search-results-list").addEventListener("click", (event) => {
-//   const mediaId = event.target.closest(".search-result-item").getAttribute("media-id");
-//   document.querySelector(".search").value = mediaId;
-//   displaySearchResults(mediaId);
-//   updateMediaDetails(mediaId);
-// });
+document.querySelector(".search-results-list").addEventListener("click", (event) => {
+  const searchResult = document.querySelector(".search-results");
+  searchResult.classList.remove("is-visible");
+
+  const item = event.target.closest(".search-result-item");
+  if (!item) return;
+
+  const mediaId = item.getAttribute("media-id");
+  console.log(mediaId);
+
+  const search = document.querySelector(".search");
+  search.value = "";
+
+  updateMediaDetails(results, mediaId);
+});
