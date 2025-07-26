@@ -99,6 +99,8 @@ function updateMediaDetails(mediaInfo) {
   if (!selectedItem) {
     return;
   }
+
+  // update the HTML with the selected media details
   const mediaContainer = document.querySelector(".media-container");
   mediaContainer.innerHTML = `
    <h1 class="title" id="title">${selectedItem.title}</h1>
@@ -107,19 +109,26 @@ function updateMediaDetails(mediaInfo) {
           </p>
           `;
 
+  // add the backdrop image
   const mainContainer = document.querySelector(".main-container");
   mainContainer.innerHTML = `
     <img class="backdrop" src="${selectedItem.backdrop}" alt="${selectedItem.title} Backdrop">
   `;
+
+  // add the cast information
   const castList = document.querySelector(".cast-list");
   for (const actor of selectedItem.cast) {
     const actorItem = document.createElement("li");
     actorItem.classList.add("cast-item");
     actorItem.innerHTML = `
-      ${actor.name} as <span class="cast-name">${actor.character}</span>
+      <span class="actor-name">${actor.name}</span>
+      <span class="actor-role"> as ${actor.character}</span>
     `;
     castList.appendChild(actorItem);
   }
+
+  // add information about reviews,genres and runtime
+  const detailsSection = document.querySelector(".");
 }
 
 // id: 438631,

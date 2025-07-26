@@ -151,6 +151,7 @@ ul {
   padding: 0;
 }
 
-.details li {
+.actor-name {
   font-weight: bold;
+  font-size: medium;
 }
