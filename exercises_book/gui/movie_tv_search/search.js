@@ -1,4 +1,4 @@
-import { apiKey } from "./config.mjs";
+// import { apiKey } from "./config.js";
 
 // Function to search for movies or TV shows
 async function searchMedia(query) {
@@ -91,6 +91,8 @@ async function getMediaDetails(query) {
   }
 }
 
+
+
 // function to update HTML  main page with the selected media details
 function updateMediaDetails(mediaInfo) {
   // first find the item with the the selected id
@@ -128,7 +130,38 @@ function updateMediaDetails(mediaInfo) {
   }
 
   // add information about reviews,genres and runtime
-  const detailsSection = document.querySelector(".");
+  const metadataContainer = document.querySelector(".metadata-container");
+  metadataContainer.innerHTML = `
+   <div class="ratings">
+    <h3 class="rating-title">Ratings - <span class="rating" id="rating">${selectedItem.voteAverage}</span></h3>
+  </div>
+  <div class="release-date">
+    <h3 class="release-date-title">Release Date - <span class="release-date-value" id="release-date">${selectedItem.releaseDate}</span></h3>
+  </div>
+  `;
+}
+
+// function to handle the display of search results when user types in the search bar
+async function displaySearchResults(query) {
+  const searchResultsList = document.querySelector(".search-results-list");
+  searchResultsList.innerHTML = ""; // Clear previous results
+  if (query) {
+    const results = await getMediaDetails(query);
+    for (const result of results) {
+      const listItem = document.createElement("li");
+      listItem.classList.add("search-result-item");
+      listItem.setAttribute("media-id", result.id);
+      listItem.innerHTML = `
+       <img src="${result.poster}" class="search-result-image" alt="${result.title} Poster" />
+        <p class="drop-down-item">
+          <span class="drop-down-title">${result.title}</span>
+          <span class="drop-down-year">${result.releaseDate.split("-")[0]} </span>
+          <span class="drop-down-cast">${result.cast.slice(0, 3).map((actor) => actor.name).join(", ")}</span>
+        </p>
+      `;
+      searchResultsList.appendChild(listItem);
+    }
+  }
 }
 
 // id: 438631,
@@ -136,4 +169,19 @@ function updateMediaDetails(mediaInfo) {
 // poster - https://image.tmdb.org/t/p/w45/d5NXSklXo0qyIYkgV94XAgMIckC.jpg
 // backdrop - https://image.tmdb.org/t/p/original/jYEW5xZkZk2WTrdbMGAPFuBqbDc.jpg
 
-const mediaInfo = await getMediaDetails("Dune");
+// Event listener for when values are being typed in the search
+document.querySelector(".search").addEventListener("input", (event) => {
+  const searchResult = document.querySelector(".search-results");
+  searchResult.classList.add('is-visible')
+  const query = event.target.value;
+  console.log(query);
+  displaySearchResults(query);
+});
+
+// // Event listener for when a search result is selected
+// document.querySelector(".search-results-list").addEventListener("click", (event) => {
+//   const mediaId = event.target.closest(".search-result-item").getAttribute("media-id");
+//   document.querySelector(".search").value = mediaId;
+//   displaySearchResults(mediaId);
+//   updateMediaDetails(mediaId);
+// });
