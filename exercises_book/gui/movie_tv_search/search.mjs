@@ -91,10 +91,40 @@ async function getMediaDetails(query) {
   }
 }
 
+// function to update HTML  main page with the selected media details
+function updateMediaDetails(mediaInfo) {
+  // first find the item with the the selected id
+  const id = event.target.value;
+  const selectedItem = mediaInfo.find((item) => item.id === parseInt(id));
+  if (!selectedItem) {
+    return;
+  }
+  const mediaContainer = document.querySelector(".media-container");
+  mediaContainer.innerHTML = `
+   <h1 class="title" id="title">${selectedItem.title}</h1>
+          <p class="overview" id="overview">
+            ${selectedItem.overview || "No overview available."}
+          </p>
+          `;
+
+  const mainContainer = document.querySelector(".main-container");
+  mainContainer.innerHTML = `
+    <img class="backdrop" src="${selectedItem.backdrop}" alt="${selectedItem.title} Backdrop">
+  `;
+  const castList = document.querySelector(".cast-list");
+  for (const actor of selectedItem.cast) {
+    const actorItem = document.createElement("li");
+    actorItem.classList.add("cast-item");
+    actorItem.innerHTML = `
+      ${actor.name} as <span class="cast-name">${actor.character}</span>
+    `;
+    castList.appendChild(actorItem);
+  }
+}
+
 // id: 438631,
 // to get the images
 // poster - https://image.tmdb.org/t/p/w45/d5NXSklXo0qyIYkgV94XAgMIckC.jpg
 // backdrop - https://image.tmdb.org/t/p/original/jYEW5xZkZk2WTrdbMGAPFuBqbDc.jpg
 
 const mediaInfo = await getMediaDetails("Dune");
-
