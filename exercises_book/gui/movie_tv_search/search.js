@@ -12,12 +12,13 @@ async function searchMedia(query) {
     }
     return data.results.slice(0, 10).map((item) => ({
       id: item.id,
-      title: item.original_title || item.title,
+      title: item.original_title || item.original_name,
       poster: item.poster_path,
       backdrop: item.backdrop_path,
       overview: item.overview,
-      releaseDate: item.release_date || "",
+      releaseDate: item.release_date || item.first_air_date,
       voteAverage: item.vote_average,
+      mediaType: item.media_type,
     }));
   } catch (error) {
     console.error("Error searching media:", error);
@@ -35,9 +36,14 @@ function processSearchResults(results) {
 }
 
 // Function to get the cast of a movie or TV show
-async function getCast(id) {
+async function getCast(id, type) {
   try {
-    const response = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`);
+    let response;
+    if (type === "tv") {
+      response = await fetch(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=${apiKey}`);
+    } else {
+      response = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${apiKey}`);
+    }
     const data = await response.json();
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -72,10 +78,11 @@ function processCastData(cast) {
 async function getMediaDetails(query) {
   try {
     const data = await searchMedia(query);
+    console.log(data);
     const processedData = processSearchResults(data);
     if (processedData && processedData.length > 0) {
       for (const item of processedData) {
-        const cast = await getCast(item.id);
+        const cast = await getCast(item.id, item.mediaType);
         const processedCast = processCastData(cast);
         item.cast = processedCast;
         item.poster = item.poster ? `https://image.tmdb.org/t/p/w92${item.poster}` : null;
@@ -85,13 +92,12 @@ async function getMediaDetails(query) {
       console.log("No results found for the query:", query);
       return null;
     }
+    console.log(processedData);
     return processedData;
   } catch (error) {
     console.error("Error fetching media details:", error);
   }
 }
-
-
 
 // function to update HTML  main page with the selected media details
 function updateMediaDetails(mediaInfo) {
@@ -147,6 +153,9 @@ async function displaySearchResults(query) {
   searchResultsList.innerHTML = ""; // Clear previous results
   if (query) {
     const results = await getMediaDetails(query);
+    if (!results) {
+      return;
+    }
     for (const result of results) {
       const listItem = document.createElement("li");
       listItem.classList.add("search-result-item");
@@ -156,7 +165,10 @@ async function displaySearchResults(query) {
         <p class="drop-down-item">
           <span class="drop-down-title">${result.title}</span>
           <span class="drop-down-year">${result.releaseDate.split("-")[0]} </span>
-          <span class="drop-down-cast">${result.cast.slice(0, 3).map((actor) => actor.name).join(", ")}</span>
+          <span class="drop-down-cast">${result.cast
+            .slice(0, 3)
+            .map((actor) => actor.name)
+            .join(", ")}</span>
         </p>
       `;
       searchResultsList.appendChild(listItem);
@@ -172,7 +184,7 @@ async function displaySearchResults(query) {
 // Event listener for when values are being typed in the search
 document.querySelector(".search").addEventListener("input", (event) => {
   const searchResult = document.querySelector(".search-results");
-  searchResult.classList.add('is-visible')
+  searchResult.classList.add("is-visible");
   const query = event.target.value;
   console.log(query);
   displaySearchResults(query);
