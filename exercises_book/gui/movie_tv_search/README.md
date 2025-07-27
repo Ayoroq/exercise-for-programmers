@@ -112,14 +112,52 @@ The application uses The Movie Database (TMDb) API to fetch:
 - Add pagination for search results
 - Implement dark mode toggle
 
+## Caching Implementation
+
+This application includes a comprehensive caching system that meets the challenge requirements:
+
+- **Two-tier caching**: Separate caches for search results (5-minute TTL) and cast data (10-minute TTL)
+- **Automatic expiration**: Cached data expires automatically based on TTL settings
+- **Memory management**: Size limits prevent unlimited growth, with LRU eviction
+- **Cache statistics**: Built-in performance monitoring with hit/miss tracking
+- **Manual cache control**: `clearCache()` and `getCacheStats()` functions available
+
+## Note: Divergence from Challenge Requirements
+
+This implementation diverges from the original exercise requirements in several ways:
+
+### **Original Exercise Requirements:**
+- Use Rotten Tomatoes API for movie data
+- Display: title, year, MPAA rating (PG-13, R, etc.), running time, synopsis
+- Show audience score as percentage
+- Provide recommendations based on score:
+  - Above 80%: "You should watch this movie right now!"
+  - Below 50%: "You should avoid this movie at all costs."
+
+### **Current Implementation:**
+- **API**: Uses TMDb API instead of Rotten Tomatoes API
+- **Data**: Shows TMDb ratings (0-10 scale) instead of percentage scores
+- **Information**: Displays cast, backdrop images, and additional metadata not in original requirements
+- **Functionality**: Provides search dropdown and detailed media pages instead of simple prompt-based interaction
+- **Scope**: Includes TV shows in addition to movies
+- **Missing**: No recommendation system based on audience scores
+- **Missing**: No MPAA ratings or runtime from API
+
+### **Why These Changes Were Made:**
+- **API Availability**: Rotten Tomatoes API has limited public access
+- **Enhanced UX**: Modern web interface provides better user experience than command-line prompts
+- **Extended Functionality**: TMDb provides richer data including images and cast information
+- **Technical Learning**: Demonstrates more advanced web development concepts
+
 ## Troubleshooting
 
 - **No search results**: Verify your TMDb API key in config.js
 - **Images not loading**: Check network connection and API key validity
 - **API errors**: Ensure you haven't exceeded TMDb API rate limits
+- **Cache issues**: Use `clearCache()` to reset cached data
 
 ## Credits
 
 - Movie and TV show data provided by [The Movie Database (TMDb)](https://www.themoviedb.org/)
 - Images and metadata courtesy of TMDb API
-- Logo image from Unsplash
+- [Logo](https://unsplash.com/photos/turned-on-projector-J39X2xX_8CQ) image from Unsplash by Jeremy Yap
